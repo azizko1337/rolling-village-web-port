@@ -1,0 +1,1 @@
+type Building = "house" | "forest" | "lake" | "factory" | "plaza" | null;

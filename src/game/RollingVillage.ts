@@ -47,6 +47,7 @@ class RollingVillage {
     private points: Record<number, number> = {}
     private diceRoll: DiceRoll = [1, 1];
     private isAwaitingPlayerAction: boolean = true;
+    private isFirstBuildingPlaced: boolean = false;
     private isAwaitingDiceRoll: boolean = true;
 
     // playing api
@@ -86,20 +87,24 @@ class RollingVillage {
         }
     }
 
-    public build(building1: Building, position1: number, building2: Building, position2: number){
+    public build(building: Building, position: number){
+        console.log("build", building, position);
         if(!this.isAwaitingPlayerAction) return;
         if(this.roundPhase !== "build" && this.roundPhase !== "bonus") return;
-        if(position1 < 0 || position1 >= this.BOARD_SIZE) return;
-        if(position2 < 0 || position2 >= this.BOARD_SIZE) return;
-        if(this.board[position1] !== null) return;
-        if(this.board[position2] !== null) return;
-        if(building1 === null || building2 === null) return;
-        if(building1 === building2) return;
-        if(position1 === position2) return;
+        if(position < 0 || position >= this.BOARD_SIZE) return;
 
-        this.board[position1] = building1;
-        this.board[position2] = building2;
-        this.isAwaitingPlayerAction = false;
+        this.board[position] = building;
+        if(this.roundPhase === "bonus"){
+            this.isAwaitingPlayerAction = false; 
+        }else{
+            if(this.isFirstBuildingPlaced){
+                this.isFirstBuildingPlaced = false;
+                this.isAwaitingPlayerAction = false;
+            }else{
+                this.isFirstBuildingPlaced = true;
+            }
+        }
+        
     }
 
     public isReadyForTick(): boolean{

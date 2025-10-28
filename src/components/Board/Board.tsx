@@ -34,12 +34,12 @@ function Board(props: Props){
             </div>
             <div className="flex flex-col w-full">
                 <div className="flex h-10">
-                    <span className="grow flex items-center justify-center">3, 4</span>
-                    <span className="grow flex items-center justify-center">5, 6</span>
-                    <span className="grow flex items-center justify-center">7</span>
-                    <span className="grow flex items-center justify-center">8, 9</span>
-                    <span className="grow flex items-center justify-center">10, 11</span>
-                    <span className="grow flex items-center justify-center">10, 11</span>
+                    <span className="grow flex items-center justify-center">1</span>
+                    <span className="grow flex items-center justify-center">2</span>
+                    <span className="grow flex items-center justify-center">3</span>
+                    <span className="grow flex items-center justify-center">4</span>
+                    <span className="grow flex items-center justify-center">5</span>
+                    <span className="grow flex items-center justify-center">6</span>
                 </div>
                 <div className="grid grid-cols-6 grid-rows-5 w-full border">
                 {

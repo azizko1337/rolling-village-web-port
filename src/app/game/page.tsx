@@ -6,6 +6,8 @@ import RollingVillage from "@/game/RollingVillage";
 import Image from "next/image";
 import { useEffect, useState, useReducer } from "react";
 import Board from "@/components/Board/Board";
+import Score from "@/components/Score/Score";
+import Dice from "@/game/Dice";
 
 function Game() {
     const [, forceRerender] = useReducer(x => x + 1, 0);
@@ -16,7 +18,7 @@ function Game() {
             console.log("tick")
             game.tick();
             if(game.getIsAwaitingDiceRoll()){
-                game.setRollDice([2, 4]);
+                game.setRollDice(Dice.roll() as DiceRoll);
             }
             forceRerender();
         }, 3000);
@@ -31,8 +33,7 @@ function Game() {
         <h3>Stan kostki: {game.getDiceRoll().join(", ")}</h3>
         <h3>Runda: {game.getRound()}</h3>
         <Board game={game}/>
-        
-        
+        <Score game={game}/>
     </div>
   );
 }

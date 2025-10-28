@@ -10,6 +10,25 @@ type Props = {
     onBuild: (building: Building, position: number) => void
 }
 
+const MAP_POINTS = {
+    0: 3,
+    2: 2,
+    3: 2,
+    5: 3,
+    7: 1,
+    10: 1,
+    12: 2,
+    14: 1,
+    15: 1,
+    17: 2,
+    19: 1,
+    22: 1,
+    24: 3,
+    26: 2,
+    27: 2,
+    29: 3,
+}
+
 function Cell (props: Props) {
     const [showBuildingMenu, setShowBuildingMenu] = useState(false);
 
@@ -38,7 +57,7 @@ function Cell (props: Props) {
         }
     }
 
-    const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0;
+    const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0 && !props.building;
 
     return (
         <div className="relative aspect-[1] border bg-background">
@@ -48,7 +67,7 @@ function Cell (props: Props) {
                 onClick={handleClick}
             >
                 {props.building && (
-                    <Image src="/public/game/building/forest.gif" alt="Building" fill={true} />
+                    <Image src={buildingToImage(props.building)!} alt="Building" fill={true} />
                 )}
             </button>
             {
@@ -80,6 +99,13 @@ function Cell (props: Props) {
                         </menu>
                         <div className="fixed w-screen h-screen top-0 left-0 z-10" onClick={() => setShowBuildingMenu(false)}></div>   
                     </>
+                )
+            }
+            {
+                MAP_POINTS[props.position!]! && (
+                    <div className="absolute top-1 right-1 w-6 h-6 bg-white border rounded-full flex items-center justify-center text-xs font-bold">
+                        {MAP_POINTS[props.position!]! as number}
+                    </div>
                 )
             }
         </div>

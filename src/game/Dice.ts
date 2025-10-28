@@ -1,7 +1,7 @@
 class Dice {
-  static roll() {
-    const d1 = Math.ceil(Math.random() * 6);
-    const d2 = Math.ceil(Math.random() * 6);
+  static roll(): DiceRoll {
+    const d1 = Math.ceil(Math.random() * 6) as DiceValue;
+    const d2 = Math.ceil(Math.random() * 6) as DiceValue;
     return [d1, d2];
   }
 }

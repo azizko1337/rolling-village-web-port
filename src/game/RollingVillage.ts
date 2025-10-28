@@ -1,8 +1,7 @@
 type Building = "house" | "forest" | "lake" | "factory" | "plaza" | null;
 type GamePhase = "setup" | "main" | "gameover";
 type RoundPhase = "build" | "bonus" | "calculate";
-type DiceValue = 1 | 2 | 3 | 4 | 5 | 6;
-type DiceRoll = [DiceValue, DiceValue];
+
 
 const MAP_POINTS = { // { position: points }
     0: 3,
@@ -59,6 +58,7 @@ class RollingVillage {
             this.gamePhase = "main";
             this.isAwaitingDiceRoll = true;
             this.isAwaitingPlayerAction = true;
+            this.round += 1;
         }else if(this.gamePhase === "main"){
             if(this.roundPhase === "build"){
                 this.roundPhase = "bonus";
@@ -193,10 +193,10 @@ class RollingVillage {
         }
 
         return (
-            isColEdgeTop(position) ? false : this.isBuildingConnectedToRow(position - this.ROW_WIDTH, building, row, [..._alreadyCheckedPositions, position]) ||
-            isColEdgeBottom(position) ? false : this.isBuildingConnectedToRow(position + this.ROW_WIDTH, building, row, [..._alreadyCheckedPositions, position]) ||
-            isColEdgeLeft(position) ? false : this.isBuildingConnectedToRow(position - 1, building, row, [..._alreadyCheckedPositions, position]) ||
-            isColEdgeRight(position) ? false : this.isBuildingConnectedToRow(position + 1, building, row, [..._alreadyCheckedPositions, position])
+            (isColEdgeTop(position) ? false : this.isBuildingConnectedToRow(position - this.ROW_WIDTH, building, row, [..._alreadyCheckedPositions, position])) ||
+            (isColEdgeBottom(position) ? false : this.isBuildingConnectedToRow(position + this.ROW_WIDTH, building, row, [..._alreadyCheckedPositions, position])) ||
+            (isColEdgeLeft(position) ? false : this.isBuildingConnectedToRow(position - 1, building, row, [..._alreadyCheckedPositions, position])) ||
+            (isColEdgeRight(position) ? false : this.isBuildingConnectedToRow(position + 1, building, row, [..._alreadyCheckedPositions, position]))
         )
     }
 }

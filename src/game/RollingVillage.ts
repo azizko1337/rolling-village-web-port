@@ -131,9 +131,9 @@ class RollingVillage {
 
         this.board[position] = building;
         if(building === "plaza") {
-            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== "plaza");
-        } else {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
+        } else {
+            this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building || p.column !== column));
         }
         
         if(this.remainingPlacements.length === 0) {

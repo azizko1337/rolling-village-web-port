@@ -18,9 +18,27 @@ function Board(props: Props){
     
 
     function handleBuild(building: Building, position: number){
-        console.log(game.getIsAwaitingPlayerAction());
         game.build(building, position);
         forceRerender();
+    }
+
+    function getAllowedBuildingsForPosition(position: number): Building[] {
+        if (!game.getIsAwaitingPlayerAction()) return [];
+        
+        
+        if (game.getRoundPhase() === "bonus") {
+            return game.getAvailableBonusBuildings();
+        }
+        
+        
+        const column = (position % 6) + 1;
+        const remainingPlacements = game.getRemainingPlacements();
+        
+        const allowedBuildings = remainingPlacements
+            .filter(placement => placement.column === column)
+            .map(placement => placement.building);
+        
+        return allowedBuildings;
     }
 
     return (
@@ -48,8 +66,9 @@ function Board(props: Props){
                             key={`building-${index}`} 
                             building={building} 
                             position={index} 
-                            allowedBuildings={["house", "forest"]} 
-                            onBuild={handleBuild} />
+                            allowedBuildings={getAllowedBuildingsForPosition(index)} 
+                            onBuild={handleBuild}
+                            isBonusPhase={game.getRoundPhase() === "bonus"} />
                     ))
                 }
                 </div>

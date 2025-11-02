@@ -8,6 +8,7 @@ type Props = {
     position: number
     allowedBuildings: Building[]
     onBuild: (building: Building, position: number) => void
+    isBonusPhase?: boolean
 }
 
 const MAP_POINTS = {
@@ -30,14 +31,26 @@ const MAP_POINTS = {
 }
 
 function Cell (props: Props) {
-    const [showBuildingMenu, setShowBuildingMenu] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
 
     function handleClick(){
-        setShowBuildingMenu(!showBuildingMenu);
+        const uniqueBuildings = Array.from(new Set(props.allowedBuildings));
+        
+        if (props.isBonusPhase && uniqueBuildings.length > 0) {
+            setShowMenu(true);
+            return;
+        }
+        
+        if (uniqueBuildings.length === 1 && uniqueBuildings[0]) {
+            props.onBuild(uniqueBuildings[0], props.position);
+        } else if (uniqueBuildings.length > 1) {
+            setShowMenu(true);
+        }
     }
 
-    function handleBuild(building: Building){
+    function handleBuildingSelect(building: Building){
         props.onBuild(building, props.position);
+        setShowMenu(false);
     }
 
     function buildingToImage(building: Building){
@@ -71,40 +84,39 @@ function Cell (props: Props) {
                 )}
             </button>
             {
-                showBuildingMenu && (
+                showMenu && (
                     <>
-                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 z-[20] bg-card border p-2 rounded-lg">
-                            <h3 className="w-full text-center text-md">Wybierz budynek</h3>
-                            <div className="w-full h-full flex">
+                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[20] bg-card border p-2 rounded-lg">
+                            <h3 className="w-full text-center text-sm mb-2">Wybierz budynek</h3>
+                            <div className="flex gap-2">
                                 {
-                                    props.allowedBuildings.map((building, index) => (
-                                        <button key={`select-building-${index}`} 
-                                                className="relative w-26 p-2 border aspect-square z-20 cursor-pointer"
-                                                onClick={() => handleBuild(building)}
+                                    Array.from(new Set(props.allowedBuildings)).map((building, index) => (
+                                        <button 
+                                            key={`select-building-${index}`} 
+                                            className="relative w-16 h-16 p-2 border rounded cursor-pointer hover:bg-gray-100"
+                                            onClick={() => handleBuildingSelect(building)}
                                         >
-                                            {
-                                                buildingToImage(building) && (
-                                                    <Image src={buildingToImage(building)!} 
+                                            {buildingToImage(building) && (
+                                                <Image 
+                                                    src={buildingToImage(building)!} 
                                                     alt={building || "empty"}
                                                     fill={true} 
-                                                    className="object-contain"/>
-                                                )
-                                            }
-                                            
+                                                    className="object-contain p-1"
+                                                />
+                                            )}
                                         </button>
                                     ))
                                 }
                             </div>
-                            
                         </menu>
-                        <div className="fixed w-screen h-screen top-0 left-0 z-10" onClick={() => setShowBuildingMenu(false)}></div>   
+                        <div className="fixed w-screen h-screen top-0 left-0 z-10" onClick={() => setShowMenu(false)}></div>
                     </>
                 )
             }
             {
-                MAP_POINTS[props.position!]! && (
+                MAP_POINTS[props.position as keyof typeof MAP_POINTS] && (
                     <div className="absolute top-1 right-1 w-6 h-6 bg-white border rounded-full flex items-center justify-center text-xs font-bold">
-                        {MAP_POINTS[props.position!]! as number}
+                        {MAP_POINTS[props.position as keyof typeof MAP_POINTS]}
                     </div>
                 )
             }

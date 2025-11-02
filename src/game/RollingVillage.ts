@@ -2,6 +2,10 @@ type Building = "house" | "forest" | "lake" | "factory" | "plaza" | null;
 type GamePhase = "setup" | "main" | "gameover";
 type RoundPhase = "build" | "bonus" | "calculate";
 
+type BuildingPlacement = {
+    building: Building;
+    column: number;
+}
 
 const MAP_POINTS = { // { position: points }
     0: 3,
@@ -48,6 +52,9 @@ class RollingVillage {
     private isAwaitingPlayerAction: boolean = true;
     private isFirstBuildingPlaced: boolean = false;
     private isAwaitingDiceRoll: boolean = true;
+    private allowedPlacements: BuildingPlacement[] = [];
+    private remainingPlacements: BuildingPlacement[] = [];
+    private usedBonusBuildings: Set<Building> = new Set();
 
     // playing api
 
@@ -92,19 +99,49 @@ class RollingVillage {
         if(!this.isAwaitingPlayerAction) return;
         if(this.roundPhase !== "build" && this.roundPhase !== "bonus") return;
         if(position < 0 || position >= this.BOARD_SIZE) return;
-
-        this.board[position] = building;
-        if(this.roundPhase === "bonus"){
-            this.isAwaitingPlayerAction = false; 
-        }else{
-            if(this.isFirstBuildingPlaced){
-                this.isFirstBuildingPlaced = false;
-                this.isAwaitingPlayerAction = false;
-            }else{
-                this.isFirstBuildingPlaced = true;
-            }
+        if(this.board[position] !== null) {
+            console.log("Cell already occupied");
+            return;
         }
         
+        if(this.roundPhase === "bonus") {
+            if(building && this.usedBonusBuildings.has(building)) {
+                console.log("This bonus building was already used");
+                return;
+            }
+            
+            this.board[position] = building;
+            if(building) {
+                this.usedBonusBuildings.add(building);
+            }
+            this.isAwaitingPlayerAction = false;
+            return;
+        }
+        
+        const column = (position % this.ROW_WIDTH) + 1;
+        
+        const placementIndex = this.remainingPlacements.findIndex(
+            p => p.building === building && p.column === column
+        );
+        
+        if(placementIndex === -1) {
+            console.log("Placement not allowed - must use remaining placements");
+            return;
+        }
+
+        this.board[position] = building;
+        if(building === "plaza") {
+            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== "plaza");
+        } else {
+            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
+        }
+        
+        if(this.remainingPlacements.length === 0) {
+            this.isAwaitingPlayerAction = false;
+            this.isFirstBuildingPlaced = false;
+        } else {
+            this.isFirstBuildingPlaced = true;
+        }
     }
 
     public isReadyForTick(): boolean{
@@ -116,6 +153,8 @@ class RollingVillage {
 
         this.diceRoll = diceRoll;
         this.isAwaitingDiceRoll = false;
+        this.allowedPlacements = this.calculateAllowedPlacements(diceRoll);
+        this.remainingPlacements = [...this.allowedPlacements];
     }
 
     // getters
@@ -155,8 +194,111 @@ class RollingVillage {
     public getDiceRoll(): DiceRoll {
         return this.diceRoll;
     }
+
+    public getAllowedPlacements(): BuildingPlacement[] {
+        return this.allowedPlacements;
+    }
+
+    public getRemainingPlacements(): BuildingPlacement[] {
+        return this.remainingPlacements;
+    }
+
+    public isPlacementAllowed(building: Building, position: number): boolean {
+        const column = (position % this.ROW_WIDTH) + 1; // Convert position to column (1-6)
+        return this.remainingPlacements.some(
+            placement => placement.building === building && placement.column === column
+        );
+    }
+
+    public getAvailableBonusBuildings(): Building[] {
+        const allBuildings: Building[] = ["house", "forest", "lake"];
+        return allBuildings.filter(b => !this.usedBonusBuildings.has(b));
+    }
     
-    // internal utils
+    private diceValueToBuilding(value: DiceValue): Building {
+        if (value === 1 || value === 4) return "house";
+        if (value === 2 || value === 5) return "forest";
+        return "lake";
+    }
+
+    private getEmptyCellsInColumn(column: number): number {
+        let count = 0;
+        for (let row = 0; row < this.ROWS; row++) {
+            const position = row * this.ROW_WIDTH + (column - 1);
+            if (this.board[position] === null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private findAlternativeColumns(targetColumn: number): number[] {
+        const emptyCells = this.getEmptyCellsInColumn(targetColumn);
+        
+        if (emptyCells > 0) {
+            return [targetColumn];
+        }
+
+        //Full column?
+        const leftColumn = targetColumn - 1;
+        const rightColumn = targetColumn + 1;
+
+        const leftEmpty = (leftColumn >= 1) ? this.getEmptyCellsInColumn(leftColumn) : -1;
+        const rightEmpty = (rightColumn <= 6) ? this.getEmptyCellsInColumn(rightColumn) : -1;
+
+        if (leftEmpty <= 0 && rightEmpty <= 0) {
+            return [];
+        }
+
+        if (leftEmpty > 0 && rightEmpty <= 0) {
+            return [leftColumn];
+        }
+
+        if (rightEmpty > 0 && leftEmpty <= 0) {
+            return [rightColumn];
+        }
+
+        if (leftEmpty > rightEmpty) {
+            return [leftColumn];
+        } else if (rightEmpty > leftEmpty) {
+            return [rightColumn];
+        } else {
+            return [leftColumn, rightColumn];
+        }
+    }
+
+    private calculateAllowedPlacements(diceRoll: DiceRoll): BuildingPlacement[] {
+        const [dice1, dice2] = diceRoll;
+        
+        const building1 = this.diceValueToBuilding(dice1);
+        const targetColumn1 = dice2;
+        const alternativeColumns1 = this.findAlternativeColumns(targetColumn1);
+        
+        const placements1: BuildingPlacement[] = alternativeColumns1.map(col => ({
+            building: building1,
+            column: col
+        }));
+
+        const building2 = this.diceValueToBuilding(dice2);
+        const targetColumn2 = dice1;
+        const alternativeColumns2 = this.findAlternativeColumns(targetColumn2);
+        
+        const placements2: BuildingPlacement[] = alternativeColumns2.map(col => ({
+            building: building2,
+            column: col
+        }));
+
+        if (dice1 === dice2) {
+            const plazaPlacements: BuildingPlacement[] = [1, 2, 3, 4, 5, 6].map(col => ({
+                building: "plaza" as Building,
+                column: col
+            }));
+            
+            return [...placements1, ...plazaPlacements];
+        }
+
+        return [...placements1, ...placements2];
+    }
 
     private calculatePoints(): number {
         let points = 0;

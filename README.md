@@ -2,6 +2,13 @@
 
 Port gry planszowej typu print&play na przeglądarkę. Stanowi on projekt zaliczeniowy na moduł PSAM.
 
+## Todo:
+- obsługa rundy 0, dowolne ale różne budynki w wylosowanych kolumnach
+- poprawa wyświetlania stanu kostki i implikując - pozostałych budynków
+- dodatek (fabryki)
+- końcowe podliczanie punktów (place i fabryki)
+- serwer, dodanie multiplayer
+
 ## Użyte technologie:
 - React, Next.js (frontend i backend)
 - Typescript

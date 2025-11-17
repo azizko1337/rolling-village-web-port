@@ -3,7 +3,7 @@
 Port gry planszowej typu print&play na przeglądarkę. Stanowi on projekt zaliczeniowy na moduł PSAM.
 
 ## Todo:
-- [ ] poprawa wyświetlania stanu kostki i implikując - pozostałych budynków
+- [ ] poprawa wyświetlania stanu kostki i implikując - pozostałych budynków, fixy gdy jest mało miejsc w kolumnach
 - [ ] końcowe podliczanie punktów (place i fabryki)
 - [ ] serwer, dodanie multiplayer (przy okazji implementacja zatwierdzania ruchów)
 - [ ] stylowanie

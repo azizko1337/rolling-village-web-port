@@ -7,6 +7,13 @@ type BuildingPlacement = {
     column: number;
 }
 
+type PointsSummary = {
+    rounds: number,
+    factories: number,
+    plazas: number,
+    total: number
+}
+
 const MAP_POINTS = { // { position: points }
     0: 3,
     2: 2,
@@ -55,6 +62,7 @@ class RollingVillage {
     private allowedPlacements: BuildingPlacement[] = [];
     private remainingPlacements: BuildingPlacement[] = [];
     private usedBonusBuildings: Set<Building> = new Set();
+    private pointsSummary: PointsSummary | null = null;
 
     // playing api
 
@@ -87,10 +95,9 @@ class RollingVillage {
                     this.gamePhase = "gameover";
                     this.isAwaitingDiceRoll = false;
                     this.isAwaitingPlayerAction = false;
+                    this.pointsSummary = this.summarizePoints();
                 }
             }
-        }else if(this.gamePhase === "gameover"){
-            
         }
     }
 
@@ -233,6 +240,10 @@ class RollingVillage {
         const allBuildings: Building[] = ["house", "forest", "lake"];
         return allBuildings.filter(b => !this.usedBonusBuildings.has(b));
     }
+
+    public getPointsSummary(): PointsSummary | null {
+        return this.pointsSummary;
+    }
     
     private diceValueToBuilding(value: DiceValue): Building {
         if (value === 1 || value === 4) return "house";
@@ -287,6 +298,8 @@ class RollingVillage {
     }
 
     private calculateAllowedPlacements(diceRoll: DiceRoll): BuildingPlacement[] {
+        if(this.gamePhase === "gameover") return [];
+
         const [dice1, dice2] = diceRoll;
         
         const building1 = this.diceValueToBuilding(dice1);
@@ -373,6 +386,94 @@ class RollingVillage {
         }
         
         return points;
+    }
+
+    private calculateFactoriesPoints(): number {
+        const isColEdgeLeft = (pos: number): boolean => {
+            return pos % this.ROW_WIDTH === 0
+        }
+        const isColEdgeRight = (pos: number): boolean => {
+            if(pos + 1 > this.BOARD_SIZE) return true;
+            return (pos + 1) % this.ROW_WIDTH === 0
+        }
+
+        let points = 0;
+        for(const position of Object.keys(this.board)){
+            const building = this.board[parseInt(position)];
+
+            if(building === "factory"){
+                const buildingAbove = this.board[parseInt(position) - this.ROW_WIDTH] ?? null;
+                const buldingBelow = this.board[parseInt(position) + this.ROW_WIDTH] ?? null;
+                const buildingLeft = isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
+                const buildingRight = isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
+
+                const buildingsNearby = [buildingAbove, buldingBelow, buildingLeft, buildingRight].filter(b => b !== null) as Building[];
+
+                const isNextToHouse = buildingsNearby.includes("house");
+                const isNextToPlaza = buildingsNearby.includes("plaza");
+                const isNextToLake = buildingsNearby.includes("lake");
+                const isNextToForest = buildingsNearby.includes("forest");
+                
+                if(isNextToHouse || isNextToPlaza){
+                    const housesNearby = buildingsNearby.filter(b => b === "house").length;
+                    points -= housesNearby * 2;
+
+                    const plazasNearby = buildingsNearby.filter(b => b === "plaza").length;
+                    points -= plazasNearby * 5;
+                }else if(isNextToLake || isNextToForest){
+                    points += 10;
+                }
+            }
+        }
+        return points;
+    }
+
+    private calculatePlazasPoints(): number {
+        const isColEdgeLeft = (pos: number): boolean => {
+            return pos % this.ROW_WIDTH === 0
+        }
+        const isColEdgeRight = (pos: number): boolean => {
+            if(pos + 1 > this.BOARD_SIZE) return true;
+            return (pos + 1) % this.ROW_WIDTH === 0
+        }
+
+        let points = 0;
+        for(const position of Object.keys(this.board)){
+            const building = this.board[parseInt(position)];
+
+            if(building === "plaza"){
+                const buildingAbove = this.board[parseInt(position) - this.ROW_WIDTH] ?? null;
+                const buldingBelow = this.board[parseInt(position) + this.ROW_WIDTH] ?? null;
+                const buildingLeft = isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
+                const buildingRight = isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
+
+                const buildingsNearby = [buildingAbove, buldingBelow, buildingLeft, buildingRight].filter(b => b !== null) as Building[];
+
+                if(buildingsNearby.includes("house") && buildingsNearby.includes("forest") && buildingsNearby.includes("lake")){
+                    points += 10;
+                }
+            }
+        }
+        return points;
+    }
+
+    private summarizePoints(): PointsSummary {
+        let roundsPoints = 0;
+        let factoriesPoints = this.calculateFactoriesPoints();
+        let plazasPoints = this.calculatePlazasPoints();
+
+        for(const round in this.points){
+            roundsPoints += this.points[round];
+        }
+
+        const totalPoints = roundsPoints + factoriesPoints + plazasPoints;
+
+        return {
+            rounds: roundsPoints,
+            factories: factoriesPoints,
+            plazas: plazasPoints,
+            total: totalPoints
+        }
     }
 
     private isBuildingConnectedToRow(position: number, building: Building, row: number, _alreadyCheckedPositions: number[] = []): boolean{

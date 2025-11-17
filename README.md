@@ -4,7 +4,6 @@ Port gry planszowej typu print&play na przeglądarkę. Stanowi on projekt zalicz
 
 ## Todo:
 - [ ] poprawa wyświetlania stanu kostki i implikując - pozostałych budynków
-- [ ] dodatek (fabryki)
 - [ ] końcowe podliczanie punktów (place i fabryki)
 - [ ] serwer, dodanie multiplayer (przy okazji implementacja zatwierdzania ruchów)
 - [ ] stylowanie

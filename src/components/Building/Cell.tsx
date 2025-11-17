@@ -73,9 +73,9 @@ function Cell (props: Props) {
     const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0 && !props.building;
 
     return (
-        <div className={clsx("relative aspect-[1] border bg-background", isBuildingAllowed && "bg-yellow-200")}>
+        <div className={clsx("relative aspect-[1] border bg-background", isBuildingAllowed && "bg-yellow-200 cursor-pointer hover:bg-gray-200")}>
             <button 
-                className={clsx("w-full h-full relative", isBuildingAllowed && "cursor-pointer hover:bg-gray-200")}
+                className={clsx("w-full h-full relative")}
                 disabled={!isBuildingAllowed}
                 onClick={handleClick}
             >

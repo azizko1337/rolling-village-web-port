@@ -40,6 +40,7 @@ function Board(props: Props){
         
         return allowedBuildings;
     }
+    
 
     return (
         <div className="flex w-full max-w-[512px]">

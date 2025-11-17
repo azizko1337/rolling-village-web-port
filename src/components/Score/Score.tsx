@@ -6,6 +6,15 @@ import RollingVillage from "@/game/RollingVillage";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useReducer } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 type Props = {
     game: RollingVillage
@@ -46,12 +55,22 @@ function Score(props: Props){
                 }
             </div>
             {pointsSummary && (
-                <div>
-                    <div>Punkty z rund: {pointsSummary.rounds}</div>
-                    <div>Punkty z fabryk: {pointsSummary.factories}</div>
-                    <div>Punkty z placów: {pointsSummary.plazas}</div>
-                    <div className="font-bold">Suma punktów: {pointsSummary.total}</div>
-                </div>
+                <Dialog>
+                    <DialogTrigger asChild className="my-4">
+                        <Button variant="outline">Szczegóły wyniku ({pointsSummary.total} pkt)</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-xl">Szczegóły wyniku</DialogTitle>
+                            <DialogDescription className="mt-4 text-lg">
+                                <span><b>Punkty z rund:</b> {pointsSummary.rounds}</span><br/>
+                                <span><b>Punkty z fabryk:</b> {pointsSummary.factories}</span><br/>
+                                <span><b>Punkty z placów:</b> {pointsSummary.plazas}</span><br/>
+                                <span className="font-bold border-t border-t-2 mt-5 block">Suma punktów: {pointsSummary.total}</span><br/>
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             )}
         </div>
         

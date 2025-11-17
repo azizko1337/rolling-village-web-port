@@ -17,6 +17,10 @@ const NUMBER_OF_ROUNDS = 9;
 function RemainingBuildings(props: Props){
     const { game } = props;
 
+    if(game.getGamePhase() === "gameover"){
+        return null;
+    }
+
     return (
         <div className="h-full ">
             <h2 className="h-10 flex items-center justify-center">Dostępne budynki:</h2>
@@ -47,7 +51,7 @@ function RemainingBuildings(props: Props){
                                                         building === "plaza" ? "/game/building/plaza.png" :
                                                         ""
                                                     } 
-                                                    alt="Building" 
+                                                    alt="Budynek" 
                                                     fill={true} 
                                                 />
                                             )}
@@ -75,7 +79,7 @@ function RemainingBuildings(props: Props){
                                                         placement.building === "plaza" ? "/game/building/plaza.png" :
                                                         ""
                                                     } 
-                                                    alt="Building" 
+                                                    alt="Budynek" 
                                                     fill={true} 
                                                 />
                                             )}
@@ -89,8 +93,6 @@ function RemainingBuildings(props: Props){
                 
             </div>
         </div>
-        
-        
     )
 }
 

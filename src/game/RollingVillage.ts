@@ -133,9 +133,11 @@ class RollingVillage {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
         } else {
             if(this.gamePhase === "setup"){
-                if(this.diceRoll[0] === this.diceRoll[1]){
+                if(this.isFirstBuildingPlaced){
+                    this.remainingPlacements = []
+                } else if(this.diceRoll[0] === this.diceRoll[1]){
                     this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building))
-                }else{
+                } else{
                     this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building && p.column !== column));
                 }
             }else{
@@ -147,6 +149,10 @@ class RollingVillage {
             this.isAwaitingPlayerAction = false;
             this.isFirstBuildingPlaced = false;
         } else {
+            this.isFirstBuildingPlaced = true;
+        }
+
+        if(!this.isFirstBuildingPlaced){
             this.isFirstBuildingPlaced = true;
         }
     }

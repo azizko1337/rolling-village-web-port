@@ -131,7 +131,10 @@ class RollingVillage {
         this.board[position] = building;
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
-        } else {
+        } else if(this.getIsFactorySituation()){
+            this.remainingPlacements = this.remainingPlacements.filter(p => (p.column !== column && p.building !== building));
+        } 
+        else {
             if(this.gamePhase === "setup"){
                 if(this.isFirstBuildingPlaced){
                     this.remainingPlacements = []
@@ -151,10 +154,6 @@ class RollingVillage {
         } else {
             this.isFirstBuildingPlaced = true;
         }
-
-        if(!this.isFirstBuildingPlaced){
-            this.isFirstBuildingPlaced = true;
-        }
     }
 
     public isReadyForTick(): boolean{
@@ -171,6 +170,13 @@ class RollingVillage {
     }
 
     // getters
+
+    public getIsFactorySituation(): boolean {
+        const [dice1, dice2] = this.diceRoll;
+        const building1 = this.diceValueToBuilding(dice1);
+        const building2 = this.diceValueToBuilding(dice2);
+        return (building1 === building2 && this.gamePhase !== "setup");
+    }
 
     public getIsAwaitingPlayerAction(): boolean {
         return this.isAwaitingPlayerAction;
@@ -321,10 +327,12 @@ class RollingVillage {
             }
         }else{
             placements2 = alternativeColumns2.map(col => ({
-            building: building2,
-            column: col
-        }));
+                building: building2,
+                column: col
+            }));
         }
+
+        
 
         if (dice1 === dice2 && this.gamePhase !== "setup") {
             const plazaPlacements: BuildingPlacement[] = [1, 2, 3, 4, 5, 6].map(col => ({
@@ -333,6 +341,19 @@ class RollingVillage {
             }));
             
             return [...placements1, ...plazaPlacements];
+        }else if(this.getIsFactorySituation()){
+            const factoryPlacements = [
+                {
+                    building: "factory" as Building,
+                    column: targetColumn1
+                },
+                {
+                    building: "factory" as Building,
+                    column: targetColumn2
+                }
+            ];
+
+            return [...placements1, ...placements2, ...factoryPlacements];
         }
 
         return [...placements1, ...placements2];
@@ -343,7 +364,7 @@ class RollingVillage {
 
         for(const position of Object.keys(this.board)){
             const building = this.board[parseInt(position)];
-            if(building === "factory" || building === "forest" || building==="lake"){
+            if(building === "house" || building === "forest" || building==="lake"){
                 const row = MAP_ROWS[(this.diceRoll[0] + this.diceRoll[1]) as keyof typeof MAP_ROWS];
                 if(building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
                     points += MAP_POINTS[parseInt(position) as keyof typeof MAP_POINTS] || 0;

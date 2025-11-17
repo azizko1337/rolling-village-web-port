@@ -17,7 +17,7 @@ function Game() {
         const interval = setInterval(() => {
             game.tick();
             if(game.getIsAwaitingDiceRoll()){
-                game.setRollDice(Dice.roll() as DiceRoll);
+                game.setRollDice([1, 4]); // For testing purposes, fixed dice roll
             }
             forceRerender();
         }, 3000);

@@ -40,11 +40,13 @@ function Game() {
           <Button variant="outline"> <MoveLeft size={10}/> Menu</Button>
         </Link>
 
-        {/* <h1>Rolling Village</h1>
-        <h3>Faza gry: {game.getGamePhase()}</h3>
-        <h3>Faza rundy: {game.getRoundPhase()}</h3>
-        <h3>Stan kostki: {game.getDiceRoll().join(", ")}</h3>
-        <h3>Runda: {game.getRound()}</h3> */}
+        {/* 
+          <h1>Rolling Village</h1>
+          <h3>Faza gry: {game.getGamePhase()}</h3>
+          <h3>Faza rundy: {game.getRoundPhase()}</h3>
+          <h3>Stan kostki: {game.getDiceRoll().join(", ")}</h3>
+          <h3>Runda: {game.getRound()}</h3> 
+        */}
 
         <div className="flex justify-center my-4">
           <GameState game={game}/>

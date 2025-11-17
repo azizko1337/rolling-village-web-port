@@ -7,19 +7,31 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useReducer } from "react";
 import React from "react";
+import {Dice1, Dice2, Dice3, Dice4, Dice5, Dice6} from "lucide-react";
 
 type Props = {
     game: RollingVillage
 }
 
-const NUMBER_OF_ROUNDS = 9;
-
 function GameState(props: Props){
     const { game } = props;
+
+    const renderDice = () => {
+        const diceRoll = game.getDiceRoll();
+        return (
+            <div className="flex gap-1">
+                {diceRoll.map((value, index) => {
+                    const DiceIcon = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6][value - 1];
+                    return <DiceIcon size={36} key={index} />;
+                })}
+            </div>
+        );
+    };
 
     return (
         <div className="flex flex-col gap-1 border p-5">
             <h1 className="w-full text-center font-bold text-lg">Runda: {game.getRound()}</h1>
+            <h2 className="w-full text-center flex flex-col items-center justify-center">Kości: <span>{renderDice()}</span></h2>
             {game.getIsAwaitingPlayerAction()  && <h2>Oczekiwanie na Twój ruch</h2>}
             {game.getRoundPhase() === "bonus" && <h2>Postaw swój bonusowy budynek!</h2>}
             {game.getGamePhase() === "gameover" && <h2>Gra zakończona! Twój wynik końcowy to <b>{game.getPointsSummary()?.total} punkty</b>.</h2>}

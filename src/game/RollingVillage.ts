@@ -85,17 +85,17 @@ class RollingVillage {
                 this.roundPhase = "calculate";
             } else if(this.roundPhase === "calculate"){
                 this.points[this.round] = this.calculatePoints();
-                    this.round += 1;
-                    this.roundPhase = "build";
-                    this.isAwaitingPlayerAction = true;
-                    this.isAwaitingDiceRoll = true;
                 
-                if(this.round > 9){
-                    this.round = 9;
+                if(this.round === 9){
                     this.gamePhase = "gameover";
                     this.isAwaitingDiceRoll = false;
                     this.isAwaitingPlayerAction = false;
                     this.pointsSummary = this.summarizePoints();
+                }else{
+                    this.roundPhase = "build";
+                    this.isAwaitingPlayerAction = true;
+                    this.isAwaitingDiceRoll = true;
+                    this.round += 1;
                 }
             }
         }
@@ -164,7 +164,7 @@ class RollingVillage {
     }
 
     public isReadyForTick(): boolean{
-        return !this.isAwaitingPlayerAction && !this.isAwaitingDiceRoll;
+        return !this.isAwaitingPlayerAction && !this.isAwaitingDiceRoll && this.gamePhase !== "gameover";
     }
 
     public setRollDice(diceRoll: DiceRoll): void {
@@ -172,6 +172,7 @@ class RollingVillage {
 
         this.diceRoll = diceRoll;
         this.isAwaitingDiceRoll = false;
+
         this.allowedPlacements = this.calculateAllowedPlacements(diceRoll);
         this.remainingPlacements = [...this.allowedPlacements];
     }

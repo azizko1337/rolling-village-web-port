@@ -95,7 +95,6 @@ class RollingVillage {
     }
 
     public build(building: Building, position: number){
-        console.log("build", building, position);
         if(!this.isAwaitingPlayerAction) return;
         if(this.roundPhase !== "build" && this.roundPhase !== "bonus") return;
         if(position < 0 || position >= this.BOARD_SIZE) return;
@@ -133,7 +132,15 @@ class RollingVillage {
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
         } else {
-            this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building || p.column !== column));
+            if(this.gamePhase === "setup"){
+                if(this.diceRoll[0] === this.diceRoll[1]){
+                    this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building))
+                }else{
+                    this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building && p.column !== column));
+                }
+            }else{
+                this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building || p.column !== column));
+            }
         }
         
         if(this.remainingPlacements.length === 0) {
@@ -274,21 +281,46 @@ class RollingVillage {
         const targetColumn1 = dice2;
         const alternativeColumns1 = this.findAlternativeColumns(targetColumn1);
         
-        const placements1: BuildingPlacement[] = alternativeColumns1.map(col => ({
-            building: building1,
-            column: col
-        }));
+        let placements1: BuildingPlacement[] = [];
+        if(this.gamePhase === "setup"){
+            for(const building of ["house", "forest", "lake"] as Building[]){
+                const allowedPlacementsForCurrentBuilding = alternativeColumns1.map(col => ({
+                    building: building,
+                    column: col
+                }))
+                placements1.push(...allowedPlacementsForCurrentBuilding);
+            }
+        }else{
+            placements1 = alternativeColumns1.map(col => ({
+                building: building1,
+                column: col
+            }));
+        }
+        
 
         const building2 = this.diceValueToBuilding(dice2);
         const targetColumn2 = dice1;
         const alternativeColumns2 = this.findAlternativeColumns(targetColumn2);
         
-        const placements2: BuildingPlacement[] = alternativeColumns2.map(col => ({
+        let placements2: BuildingPlacement[] = [];
+        if(this.gamePhase === "setup"){
+            if(this.diceRoll[0] !== this.diceRoll[1]){
+                for(const building of ["house", "forest", "lake"] as Building[]){
+                    const allowedPlacementsForCurrentBuilding = alternativeColumns2.map(col => ({
+                        building: building,
+                        column: col
+                    }))
+                    placements2.push(...allowedPlacementsForCurrentBuilding);
+                }
+            }
+        }else{
+            placements2 = alternativeColumns2.map(col => ({
             building: building2,
             column: col
         }));
+        }
 
-        if (dice1 === dice2) {
+        if (dice1 === dice2 && this.gamePhase !== "setup") {
             const plazaPlacements: BuildingPlacement[] = [1, 2, 3, 4, 5, 6].map(col => ({
                 building: "plaza" as Building,
                 column: col
@@ -305,9 +337,11 @@ class RollingVillage {
 
         for(const position of Object.keys(this.board)){
             const building = this.board[parseInt(position)];
-            const row = MAP_ROWS[(this.diceRoll[0] + this.diceRoll[1]) as keyof typeof MAP_ROWS];
-            if(building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
-                points += MAP_POINTS[parseInt(position) as keyof typeof MAP_POINTS] || 0;
+            if(building === "factory" || building === "forest" || building==="lake"){
+                const row = MAP_ROWS[(this.diceRoll[0] + this.diceRoll[1]) as keyof typeof MAP_ROWS];
+                if(building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
+                    points += MAP_POINTS[parseInt(position) as keyof typeof MAP_POINTS] || 0;
+                }
             }
         }
         

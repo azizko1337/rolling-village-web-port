@@ -15,7 +15,6 @@ function Game() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            console.log("tick")
             game.tick();
             if(game.getIsAwaitingDiceRoll()){
                 game.setRollDice(Dice.roll() as DiceRoll);

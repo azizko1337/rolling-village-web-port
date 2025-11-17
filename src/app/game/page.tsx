@@ -14,15 +14,19 @@ function Game() {
     const [game, setGame] = useState(new RollingVillage());
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            game.tick();
-            if(game.getIsAwaitingDiceRoll()){
-                game.setRollDice([1, 4]); // For testing purposes, fixed dice roll
-            }
-            forceRerender();
-        }, 3000);
-        return () => clearInterval(interval);
-      }, []);
+      let active = true;
+      const loop = () => {
+        if (!active) return;
+        game.tick();
+        if (game.getIsAwaitingDiceRoll()) {
+          game.setRollDice(Dice.roll());
+        }
+        forceRerender();
+        requestAnimationFrame(loop);
+      };
+      loop();
+      return () => { active = false; };
+    }, [game]);
 
   const buildingNameMap: Record<string, string> = {
     house: "Dom",

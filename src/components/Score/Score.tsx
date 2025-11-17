@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import {RotateCcw, ListCollapse, List} from "lucide-react"
 
 type Props = {
     game: RollingVillage
@@ -55,22 +56,27 @@ function Score(props: Props){
                 }
             </div>
             {pointsSummary && (
-                <Dialog>
-                    <DialogTrigger asChild className="my-4">
-                        <Button variant="outline">Szczegóły wyniku ({pointsSummary.total} pkt)</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className="text-xl">Szczegóły wyniku</DialogTitle>
-                            <DialogDescription className="mt-4 text-lg">
-                                <span><b>Punkty z rund:</b> {pointsSummary.rounds}</span><br/>
-                                <span><b>Punkty z fabryk:</b> {pointsSummary.factories}</span><br/>
-                                <span><b>Punkty z placów:</b> {pointsSummary.plazas}</span><br/>
-                                <span className="font-bold border-t border-t-2 mt-5 block">Suma punktów: {pointsSummary.total}</span><br/>
-                            </DialogDescription>
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
+                <div className="flex gap-2 items-center">
+                    <Dialog>
+                        <DialogTrigger asChild className="my-4">
+                            <Button variant="outline"><ListCollapse size={10}/> Szczegóły wyniku ({pointsSummary.total} pkt)</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="text-xl">Szczegóły wyniku</DialogTitle>
+                                <DialogDescription className="mt-4 text-lg">
+                                    <span><b>Punkty z rund:</b> {pointsSummary.rounds}</span><br/>
+                                    <span><b>Punkty z fabryk:</b> {pointsSummary.factories}</span><br/>
+                                    <span><b>Punkty z placów:</b> {pointsSummary.plazas}</span><br/>
+                                    <span className="font-bold border-t border-t-2 mt-5 block">Suma punktów: {pointsSummary.total}</span><br/>
+                                </DialogDescription>
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                    <Button variant="outline" onClick={() => game.reset()}>
+                        <RotateCcw size={10}/> Graj od nowa
+                    </Button>
+                </div>
             )}
         </div>
         

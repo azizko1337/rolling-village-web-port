@@ -270,31 +270,36 @@ class RollingVillage {
         }
 
         //Full column?
-        const leftColumn = targetColumn - 1;
-        const rightColumn = targetColumn + 1;
+        for(let i=1; i<this.ROW_WIDTH; i++){
+            const leftColumn = targetColumn - i;
+            const rightColumn = targetColumn + i;
 
-        const leftEmpty = (leftColumn >= 1) ? this.getEmptyCellsInColumn(leftColumn) : -1;
-        const rightEmpty = (rightColumn <= 6) ? this.getEmptyCellsInColumn(rightColumn) : -1;
+            const leftEmpty = (leftColumn >= 1) ? this.getEmptyCellsInColumn(leftColumn) : -1;
+            const rightEmpty = (rightColumn <= 6) ? this.getEmptyCellsInColumn(rightColumn) : -1;
 
-        if (leftEmpty <= 0 && rightEmpty <= 0) {
-            return [];
+            if (leftEmpty <= 0 && rightEmpty <= 0) {
+                continue;
+            }
+
+            if (leftEmpty > 0 && rightEmpty <= 0) {
+                return [leftColumn];
+            }
+
+            if (rightEmpty > 0 && leftEmpty <= 0) {
+                return [rightColumn];
+            }
+
+            if (leftEmpty > rightEmpty) {
+                return [leftColumn];
+            } else if (rightEmpty > leftEmpty) {
+                return [rightColumn];
+            } else {
+                return [leftColumn, rightColumn];
+            }
         }
 
-        if (leftEmpty > 0 && rightEmpty <= 0) {
-            return [leftColumn];
-        }
-
-        if (rightEmpty > 0 && leftEmpty <= 0) {
-            return [rightColumn];
-        }
-
-        if (leftEmpty > rightEmpty) {
-            return [leftColumn];
-        } else if (rightEmpty > leftEmpty) {
-            return [rightColumn];
-        } else {
-            return [leftColumn, rightColumn];
-        }
+        //no columns available, most likely not possible in standard gameplay
+        return []
     }
 
     private calculateAllowedPlacements(diceRoll: DiceRoll): BuildingPlacement[] {
@@ -377,7 +382,7 @@ class RollingVillage {
 
         for(const position of Object.keys(this.board)){
             const building = this.board[parseInt(position)];
-            if(building === "house" || building === "forest" || building==="lake"){
+            if(building === "house" || building === "forest" || building === "lake"){
                 const row = MAP_ROWS[(this.diceRoll[0] + this.diceRoll[1]) as keyof typeof MAP_ROWS];
                 if(building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
                     points += MAP_POINTS[parseInt(position) as keyof typeof MAP_POINTS] || 0;

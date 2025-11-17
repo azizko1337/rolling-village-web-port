@@ -21,7 +21,7 @@ function Score(props: Props){
     const pointsSummary = game.getPointsSummary();
 
     return (
-        <div>
+        <div className="w-full flex-col flex items-center">
             <div className="grid grid-cols-9 w-full max-w-[512px] border">
                 {
                     new Array(NUMBER_OF_ROUNDS).fill(null).map((_, index) => (

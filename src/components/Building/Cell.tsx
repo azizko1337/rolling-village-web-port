@@ -75,7 +75,7 @@ function Cell (props: Props) {
     return (
         <div className={clsx("relative aspect-[1] border bg-background", isBuildingAllowed && "bg-yellow-200 cursor-pointer hover:bg-gray-200")}>
             <button 
-                className={clsx("w-full h-full relative")}
+                className={clsx("w-full h-full relative", isBuildingAllowed && "cursor-pointer")}
                 disabled={!isBuildingAllowed}
                 onClick={handleClick}
             >

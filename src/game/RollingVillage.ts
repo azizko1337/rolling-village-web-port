@@ -66,6 +66,22 @@ class RollingVillage {
 
     // playing api
 
+    public reset(): void {
+        this.board = Array(this.BOARD_SIZE).fill(null);
+        this.round = 0;
+        this.gamePhase = "setup";
+        this.roundPhase = "build";
+        this.points = {};
+        this.diceRoll = [1, 1];
+        this.isAwaitingPlayerAction = true;
+        this.isFirstBuildingPlaced = false;
+        this.isAwaitingDiceRoll = true;
+        this.allowedPlacements = [];
+        this.remainingPlacements = [];
+        this.usedBonusBuildings = new Set();
+        this.pointsSummary = null;
+    }
+
     public tick(){
         if(!this.isReadyForTick()) return;
 

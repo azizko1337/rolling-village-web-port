@@ -62,7 +62,7 @@ function RemainingBuildings(props: Props){
                                 game.getRemainingPlacements().map((placement, index) => (
                                     <React.Fragment key={index}>
                                         <div className="w-full aspect-square flex items-center justify-center border-b border-l bg-background">
-                                            {placement.building !== "plaza" ? placement.column : "Dowolne"}
+                                            {placement.column}
                                         </div>
                                         <div className="w-full aspect-square relative border-b border-r bg-background">
                                             {placement.building && (

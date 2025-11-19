@@ -542,8 +542,8 @@ class RollingVillage {
             if(building === "factory"){
                 const buildingAbove = this.board[parseInt(position) - this.ROW_WIDTH] ?? null;
                 const buldingBelow = this.board[parseInt(position) + this.ROW_WIDTH] ?? null;
-                const buildingLeft = isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
-                const buildingRight = isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
+                const buildingLeft = !isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
+                const buildingRight = !isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
 
                 const buildingsNearby = [buildingAbove, buldingBelow, buildingLeft, buildingRight].filter(b => b !== null) as Building[];
 
@@ -582,8 +582,8 @@ class RollingVillage {
             if(building === "plaza"){
                 const buildingAbove = this.board[parseInt(position) - this.ROW_WIDTH] ?? null;
                 const buldingBelow = this.board[parseInt(position) + this.ROW_WIDTH] ?? null;
-                const buildingLeft = isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
-                const buildingRight = isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
+                const buildingLeft = !isColEdgeLeft(+position) ? this.board[parseInt(position) - 1] : null;
+                const buildingRight = !isColEdgeRight(+position) ? this.board[parseInt(position) + 1] : null;
 
                 const buildingsNearby = [buildingAbove, buldingBelow, buildingLeft, buildingRight].filter(b => b !== null) as Building[];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Cell from "@/components/Building/Cell";
+import clsx from "clsx";
 import RollingVillage from "@/game/RollingVillage";
 import { useReducer } from "react";
 
@@ -37,6 +38,14 @@ function Board(props: Props){
         
         return allowedBuildings;
     }
+    
+    function isColumnActive(column: number): boolean {
+        if (!game.getIsAwaitingPlayerAction()) return false;
+        if (game.getRoundPhase() === "bonus") return false;
+
+        const remainingPlacements = game.getRemainingPlacements();
+        return remainingPlacements.some(placement => placement.column === column);
+    }
     return (
         <div className="board-paper w-full p-4 sm:p-5 soft-fade-in shadow-[0_30px_60px_rgba(33,55,34,0.25)]">
             <div className="board-surface flex flex-col">
@@ -50,11 +59,20 @@ function Board(props: Props){
                     </div>
                     <div className="flex w-full flex-col gap-3">
                         <div className="flex gap-3 text-xs font-semibold tracking-[0.3em] text-foreground/65">
-                            {[1, 2, 3, 4, 5, 6].map(column => (
-                                <span key={`column-${column}`} className="flex h-10 flex-1 items-center justify-center rounded-full bg-white/20">
-                                    {column}
-                                </span>
-                            ))}
+                            {[1, 2, 3, 4, 5, 6].map(column => {
+                                const active = isColumnActive(column);
+                                return (
+                                    <span
+                                        key={`column-${column}`}
+                                        className={clsx(
+                                            "relative flex h-10 flex-1 items-center justify-center rounded-full bg-white/20 transition-all duration-300",
+                                            active && "board-column-active board-column-active-label"
+                                        )}
+                                    >
+                                        {column}
+                                    </span>
+                                );
+                            })}
                         </div>
                         <div className="board-grid grid aspect-[6/5] grid-cols-6 grid-rows-5 gap-2 p-3">
                         {

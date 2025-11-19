@@ -41,10 +41,10 @@ function Board(props: Props){
         <div className="board-paper w-full p-4 sm:p-5 soft-fade-in shadow-[0_30px_60px_rgba(33,55,34,0.25)]">
             <div className="board-surface flex flex-col">
                 <div className="flex w-full gap-4">
-                    <div className="flex flex-col gap-3 pt-7 text-xs font-semibold tracking-[0.3em] text-foreground/65">
-                        {[["3", "4"], ["5", "6"], ["7"], ["8", "9"], ["10", "11"]].map((items, idx) => (
-                            <span key={`row-label-${idx}`} className="flex min-h-[3rem] items-center justify-end pr-1">
-                                {items.join(" · ")}
+                    <div className="flex flex-col justify-between pt-14 text-xs font-semibold tracking-[0.3em] text-foreground/65">
+                        {[ ["3", "4"], ["5", "6"], ["7"], ["8", "9"], ["10", "11"] ].map((items, idx) => (
+                            <span key={`row-label-${idx}`} className="flex flex-1 items-center justify-end pr-1">
+                                ({items.join("·")})
                             </span>
                         ))}
                     </div>

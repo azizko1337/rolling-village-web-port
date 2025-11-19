@@ -22,14 +22,14 @@ function RemainingBuildings(props: Props){
     }
 
     return (
-        <div className="h-full ">
-            <h2 className="h-10 flex items-center justify-center">Dostępne budynki:</h2>
-            <div className="grid grid-cols-2 max-h-[400px] overflow-y-auto">
-                <div className="w-full aspect-square relative border-t border-t-black border-l-black border-l border-t-black border-l-black border-b-black border-b-4">
-                    <Image src="/game/ui/column.webp" alt="Kolumna" fill={true} />
+        <div className="h-full bg-card p-4 rounded-xl shadow-lg border-2 border-border">
+            <h2 className="h-10 flex items-center justify-center font-bold text-lg text-primary mb-2">Dostępne budynki</h2>
+            <div className="grid grid-cols-2 max-h-[400px] overflow-y-auto gap-2 p-2 bg-background/50 rounded-lg">
+                <div className="w-full aspect-square relative bg-background rounded-lg border-2 border-border shadow-sm overflow-hidden">
+                    <Image src="/game/ui/column.webp" alt="Kolumna" fill={true} className="object-contain p-2" />
                 </div>
-                <div className="w-full aspect-square relative border-t border-t-black border-l-black border-r border-t-black border-r-black border-b-black border-b-4">
-                    <Image src="/game/ui/construction.png" alt="Budynek" fill={true} />
+                <div className="w-full aspect-square relative bg-background rounded-lg border-2 border-border shadow-sm overflow-hidden">
+                    <Image src="/game/ui/construction.png" alt="Budynek" fill={true} className="object-contain p-2" />
                 </div>
                 {
                     game.getRoundPhase() === "bonus" ? (
@@ -37,10 +37,10 @@ function RemainingBuildings(props: Props){
                             {
                                 game.getAvailableBonusBuildings().map((building, index) => (
                                     <React.Fragment key={index}>
-                                        <div className="w-full aspect-square flex items-center justify-center border-b border-l bg-background">
+                                        <div className="w-full aspect-square flex items-center justify-center bg-accent/20 rounded-lg border-2 border-dashed border-primary/50 text-primary font-bold text-xl">
                                             *
                                         </div>
-                                        <div className="w-full aspect-square relative border-b border-r bg-background">
+                                        <div className="w-full aspect-square relative bg-background rounded-lg border-2 border-primary shadow-md overflow-hidden animate-pulse-slow">
                                             {building && (
                                                 <Image 
                                                     src={
@@ -53,6 +53,7 @@ function RemainingBuildings(props: Props){
                                                     } 
                                                     alt="Budynek" 
                                                     fill={true} 
+                                                    className="object-contain p-2"
                                                 />
                                             )}
                                         </div>
@@ -65,10 +66,10 @@ function RemainingBuildings(props: Props){
                             {
                                 game.getRemainingPlacements().map((placement, index) => (
                                     <React.Fragment key={index}>
-                                        <div className="w-full aspect-square flex items-center justify-center border-b border-l bg-background">
+                                        <div className="w-full aspect-square flex items-center justify-center bg-background rounded-lg border-2 border-border shadow-sm font-bold text-foreground/80">
                                             {placement.column}
                                         </div>
-                                        <div className="w-full aspect-square relative border-b border-r bg-background">
+                                        <div className="w-full aspect-square relative bg-background rounded-lg border-2 border-border shadow-sm overflow-hidden hover:scale-105 transition-transform duration-200">
                                             {placement.building && (
                                                 <Image 
                                                     src={
@@ -81,6 +82,7 @@ function RemainingBuildings(props: Props){
                                                     } 
                                                     alt="Budynek" 
                                                     fill={true} 
+                                                    className="object-contain p-2"
                                                 />
                                             )}
                                         </div>

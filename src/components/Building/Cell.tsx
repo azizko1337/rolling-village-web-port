@@ -73,27 +73,32 @@ function Cell (props: Props) {
     const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0 && !props.building;
 
     return (
-        <div className={clsx("relative aspect-[1] border bg-background", isBuildingAllowed && "bg-yellow-200 cursor-pointer hover:bg-gray-200")}>
+        <div className={clsx(
+            "relative aspect-[1] border-2 border-border/50 bg-card rounded-lg shadow-sm transition-all duration-300",
+            isBuildingAllowed && "bg-accent/50 cursor-pointer hover:bg-accent hover:scale-105 hover:shadow-md hover:border-primary/50 animate-pulse-slow"
+        )}>
             <button 
-                className={clsx("w-full h-full relative", isBuildingAllowed && "cursor-pointer")}
+                className={clsx("w-full h-full relative rounded-lg overflow-hidden", isBuildingAllowed && "cursor-pointer")}
                 disabled={!isBuildingAllowed}
                 onClick={handleClick}
             >
                 {props.building && (
-                    <Image src={buildingToImage(props.building)!} alt="Building" fill={true} />
+                    <div className="animate-in zoom-in duration-300 w-full h-full relative">
+                        <Image src={buildingToImage(props.building)!} alt="Building" fill={true} className="object-contain p-1 drop-shadow-sm" />
+                    </div>
                 )}
             </button>
             {
                 showMenu && (
                     <>
-                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[20] bg-card border p-2 rounded-lg">
-                            <h3 className="w-full text-center text-sm mb-2">Wybierz budynek</h3>
+                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[20] bg-popover border-2 border-primary p-3 rounded-xl shadow-xl animate-in fade-in zoom-in duration-200">
+                            <h3 className="w-full text-center text-sm font-bold mb-2 text-foreground">Wybierz budynek</h3>
                             <div className="flex gap-2">
                                 {
                                     Array.from(new Set(props.allowedBuildings)).map((building, index) => (
                                         <button 
                                             key={`select-building-${index}`} 
-                                            className="relative w-16 h-16 p-2 border rounded cursor-pointer hover:bg-gray-100"
+                                            className="relative w-16 h-16 p-2 border-2 border-transparent hover:border-primary rounded-lg cursor-pointer hover:bg-accent transition-colors"
                                             onClick={() => handleBuildingSelect(building)}
                                         >
                                             {buildingToImage(building) && (
@@ -109,13 +114,13 @@ function Cell (props: Props) {
                                 }
                             </div>
                         </menu>
-                        <div className="fixed w-screen h-screen top-0 left-0 z-10" onClick={() => setShowMenu(false)}></div>
+                        <div className="fixed w-screen h-screen top-0 left-0 z-10 bg-black/20 backdrop-blur-[1px]" onClick={() => setShowMenu(false)}></div>
                     </>
                 )
             }
             {
                 MAP_POINTS[props.position as keyof typeof MAP_POINTS] && (
-                    <div className="absolute top-1 right-1 w-6 h-6 bg-white border rounded-full flex items-center justify-center text-xs font-bold">
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-secondary text-secondary-foreground border-2 border-border rounded-full flex items-center justify-center text-xs font-bold shadow-sm z-10">
                         {MAP_POINTS[props.position as keyof typeof MAP_POINTS]}
                     </div>
                 )

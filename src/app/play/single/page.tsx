@@ -47,7 +47,7 @@ function Game() {
             <Board game={game} />
           </div>
           <div className="order-1 lg:order-2 lg:sticky lg:top-8">
-            <div className="flex flex-col gap-5 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:pr-2">
+            <div className="flex flex-col gap-5 lg:max-h-[calc(100vh-10rem)] lg:pr-2">
               <GameState game={game} />
               <RemainingBuildings game={game} />
               <Score game={game} />

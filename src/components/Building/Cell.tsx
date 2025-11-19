@@ -1,7 +1,8 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import SelectBuildingMenu from "./SelectBuildingMenu";
 
 type Props = {
     building: Building
@@ -32,23 +33,25 @@ const MAP_POINTS = {
 
 function Cell (props: Props) {
     const [showMenu, setShowMenu] = useState(false);
+    const selectableBuildings = useMemo(
+        () => Array.from(new Set(props.allowedBuildings.filter((building): building is Exclude<Building, null> => Boolean(building)))),
+        [props.allowedBuildings]
+    );
 
     function handleClick(){
-        const uniqueBuildings = Array.from(new Set(props.allowedBuildings));
-        
-        if (props.isBonusPhase && uniqueBuildings.length > 0) {
+        if (props.isBonusPhase && selectableBuildings.length > 0) {
             setShowMenu(true);
             return;
         }
         
-        if (uniqueBuildings.length === 1 && uniqueBuildings[0]) {
-            props.onBuild(uniqueBuildings[0], props.position);
-        } else if (uniqueBuildings.length > 1) {
+        if (selectableBuildings.length === 1 && selectableBuildings[0]) {
+            props.onBuild(selectableBuildings[0], props.position);
+        } else if (selectableBuildings.length > 1) {
             setShowMenu(true);
         }
     }
 
-    function handleBuildingSelect(building: Building){
+    function handleBuildingSelect(building: Exclude<Building, null>){
         props.onBuild(building, props.position);
         setShowMenu(false);
     }
@@ -70,7 +73,7 @@ function Cell (props: Props) {
         }
     }
 
-    const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0 && !props.building;
+    const isBuildingAllowed = selectableBuildings.length > 0 && !props.building;
 
     return (
         <div
@@ -106,32 +109,12 @@ function Cell (props: Props) {
             </button>
             {
                 showMenu && (
-                    <>
-                        <menu className="absolute top-1/2 left-1/2 z-[20] w-60 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-foreground/10 bg-card/95 p-4 text-sm shadow-xl">
-                            <h3 className="parchment-title mb-3 text-center text-[0.7rem] tracking-[0.4em]">Wybierz budynek</h3>
-                            <div className="flex flex-wrap justify-center gap-3">
-                                {
-                                    Array.from(new Set(props.allowedBuildings)).map((building, index) => (
-                                        <button 
-                                            key={`select-building-${index}`} 
-                                            className="relative h-16 w-16 rounded-xl border-2 border-foreground/15 bg-white/70 p-2 shadow-[0_10px_15px_rgba(35,62,29,0.2)] transition-all hover:-translate-y-1 hover:bg-white"
-                                            onClick={() => handleBuildingSelect(building)}
-                                        >
-                                            {buildingToImage(building) && (
-                                                <Image 
-                                                    src={buildingToImage(building)!} 
-                                                    alt={building || "empty"}
-                                                    fill={true} 
-                                                    className="object-contain p-1"
-                                                />
-                                            )}
-                                        </button>
-                                    ))
-                                }
-                            </div>
-                        </menu>
-                        <div className="fixed w-screen h-screen top-0 left-0 z-10" onClick={() => setShowMenu(false)}></div>
-                    </>
+                    <SelectBuildingMenu 
+                        allowedBuildings={selectableBuildings}
+                        onSelect={handleBuildingSelect}
+                        onClose={() => setShowMenu(false)}
+                        buildingToImage={buildingToImage}
+                    />
                 )
             }
             {

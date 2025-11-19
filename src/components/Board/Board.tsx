@@ -38,8 +38,8 @@ function Board(props: Props){
         return allowedBuildings;
     }
     return (
-        <div className="board-paper w-full p-5 soft-fade-in shadow-[0_30px_60px_rgba(33,55,34,0.25)]">
-            <div className="board-surface">
+        <div className="board-paper w-full p-4 sm:p-5 soft-fade-in shadow-[0_30px_60px_rgba(33,55,34,0.25)]">
+            <div className="board-surface flex flex-col">
                 <div className="flex w-full gap-4">
                     <div className="flex flex-col gap-3 pt-7 text-xs font-semibold tracking-[0.3em] text-foreground/65">
                         {[["3", "4"], ["5", "6"], ["7"], ["8", "9"], ["10", "11"]].map((items, idx) => (
@@ -56,7 +56,7 @@ function Board(props: Props){
                                 </span>
                             ))}
                         </div>
-                        <div className="board-grid grid grid-cols-6 grid-rows-5 gap-2 p-3">
+                        <div className="board-grid grid aspect-[6/5] grid-cols-6 grid-rows-5 gap-2 p-3">
                         {
                             game.getBoard().map((building, index) => (
                                 <Cell 

@@ -25,10 +25,10 @@ function Score(props: Props){
     const pointsSummary = game.getPointsSummary();
 
     return (
-        <div className="flex w-full flex-col items-center gap-4">
-            <div className="w-full max-w-3xl rounded-[2rem] border-4 border-white/30 bg-gradient-to-b from-white/80 to-white/65 p-4 shadow-[0_30px_40px_rgba(15,33,20,0.22)]">
+        <div className="flex w-full flex-col gap-4">
+            <div className="w-full rounded-[2rem] border-4 border-white/30 bg-gradient-to-b from-white/80 to-white/65 p-4 shadow-[0_30px_40px_rgba(15,33,20,0.22)]">
                 <div className="parchment-title text-center text-[0.7rem] tracking-[0.45em]">Tabela punktów</div>
-                <div className="mt-4 grid grid-cols-9 gap-2">
+                <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6 xl:grid-cols-9">
                     {new Array(NUMBER_OF_ROUNDS).fill(null).map((_, index) => (
                         <div
                             key={`score-round-${index}-header`}
@@ -56,7 +56,7 @@ function Score(props: Props){
                 </div>
             </div>
             {pointsSummary && (
-                <div className="flex flex-col items-center gap-3 text-center sm:flex-row">
+                <div className="flex flex-col gap-3 text-center sm:flex-row sm:items-center sm:justify-between">
                     <Dialog>
                         <DialogTrigger asChild className="my-2">
                             <Button variant="outline" size="lg" className="uppercase tracking-[0.3em]">

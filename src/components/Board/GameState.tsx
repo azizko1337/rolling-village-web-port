@@ -30,9 +30,9 @@ function GameState(props: Props){
     };
 
     return (
-        <div className="w-full max-w-xl rounded-[1.75rem] border-4 border-white/30 bg-gradient-to-b from-white/70 via-white/80 to-white/60 p-6 text-center shadow-[0_25px_45px_rgba(14,35,18,0.25)]">
+        <div className="w-full rounded-[1.75rem] border-4 border-white/30 bg-gradient-to-b from-white/70 via-white/80 to-white/60 p-5 text-center shadow-[0_25px_45px_rgba(14,35,18,0.25)]">
             <p className="parchment-title text-[0.65rem]">Aktualna runda</p>
-            <h1 className="text-3xl font-semibold text-[color:var(--leaf-700)]">Runda {game.getRound()} / 9</h1>
+            <h1 className="text-2xl font-semibold text-[color:var(--leaf-700)] sm:text-3xl">Runda {game.getRound()} / 9</h1>
             <div className="mt-5 flex flex-col items-center gap-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.4em] text-foreground/70">Kości</span>
                 {renderDice()}

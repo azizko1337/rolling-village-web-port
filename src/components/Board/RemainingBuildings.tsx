@@ -40,9 +40,9 @@ function RemainingBuildings(props: Props){
         : game.getRemainingPlacements().map(placement => ({ label: `Kol. ${placement.column}`, building: placement.building }));
 
     return (
-        <div className="w-full max-w-xs self-stretch rounded-[1.75rem] border-4 border-white/25 bg-gradient-to-b from-white/70 to-white/55 p-4 shadow-[0_30px_45px_rgba(19,37,22,0.2)]">
+        <div className="w-full self-stretch rounded-[1.75rem] border-4 border-white/25 bg-gradient-to-b from-white/70 to-white/55 p-4 shadow-[0_30px_45px_rgba(19,37,22,0.2)]">
             <h2 className="parchment-title text-center text-[0.7rem] tracking-[0.4em]">Dostępne budynki</h2>
-            <div className="mt-4 flex flex-col gap-3 overflow-y-auto pr-2" style={{ maxHeight: 420 }}>
+            <div className="mt-4 flex flex-col gap-3 overflow-y-auto pr-1 sm:pr-2 lg:max-h-[320px] xl:max-h-[420px]">
                 {rows.map((row, index) => (
                     <div
                         key={index}

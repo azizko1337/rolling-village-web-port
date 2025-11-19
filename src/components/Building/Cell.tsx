@@ -1,5 +1,6 @@
 
 import clsx from "clsx";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import SelectBuildingMenu from "./SelectBuildingMenu";
@@ -74,6 +75,9 @@ function Cell (props: Props) {
     }
 
     const isBuildingAllowed = selectableBuildings.length > 0 && !props.building;
+    const singleSelectableBuilding = selectableBuildings.length === 1 ? selectableBuildings[0] : null;
+    const hasMultipleOptions = selectableBuildings.length > 1;
+    const previewImage = singleSelectableBuilding ? buildingToImage(singleSelectableBuilding) : null;
 
     return (
         <div
@@ -101,6 +105,19 @@ function Cell (props: Props) {
                 {!props.building && (
                     <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold tracking-[0.25em] text-white/40">
                         ·
+                    </span>
+                )}
+                {isBuildingAllowed && previewImage && (
+                    <Image
+                        src={previewImage}
+                        alt="Preview building"
+                        fill={true}
+                        className="pointer-events-none object-contain p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-60"
+                    />
+                )}
+                {isBuildingAllowed && hasMultipleOptions && (
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-white/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        <MoreHorizontal className="h-6 w-6" aria-hidden={true} />
                     </span>
                 )}
                 {isBuildingAllowed && (

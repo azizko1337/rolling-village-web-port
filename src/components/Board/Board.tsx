@@ -49,43 +49,47 @@ function Board(props: Props){
     return (
         <div className="board-paper w-full p-4 sm:p-5 soft-fade-in shadow-[0_30px_60px_rgba(33,55,34,0.25)]">
             <div className="board-surface flex flex-col">
-                <div className="flex w-full gap-4">
-                    <div className="flex flex-col justify-between pt-14 text-xs font-semibold tracking-[0.3em] text-foreground/65">
+                <div className="flex w-full flex-col gap-4 sm:flex-row">
+                    <div className="order-2 flex w-full items-center justify-between gap-2 text-[0.65rem] font-semibold tracking-[0.3em] text-foreground/65 sm:order-1 sm:w-auto sm:flex-col sm:items-end sm:justify-between sm:pt-14">
                         {[ ["3", "4"], ["5", "6"], ["7"], ["8", "9"], ["10", "11"] ].map((items, idx) => (
-                            <span key={`row-label-${idx}`} className="flex flex-1 items-center justify-end pr-1">
+                            <span key={`row-label-${idx}`} className="flex flex-1 items-center justify-center sm:justify-end sm:pr-1">
                                 ({items.join("·")})
                             </span>
                         ))}
                     </div>
-                    <div className="flex w-full flex-col gap-3">
-                        <div className="flex gap-3 text-xs font-semibold tracking-[0.3em] text-foreground/65">
-                            {[1, 2, 3, 4, 5, 6].map(column => {
-                                const active = isColumnActive(column);
-                                return (
-                                    <span
-                                        key={`column-${column}`}
-                                        className={clsx(
-                                            "relative flex h-10 flex-1 items-center justify-center rounded-full bg-white/20 transition-all duration-300",
-                                            active && "board-column-active board-column-active-label"
-                                        )}
-                                    >
-                                        {column}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                        <div className="board-grid grid aspect-[6/5] grid-cols-6 grid-rows-5 gap-2 p-3">
-                        {
-                            game.getBoard().map((building, index) => (
-                                <Cell 
-                                    key={`building-${index}`} 
-                                    building={building} 
-                                    position={index} 
-                                    allowedBuildings={getAllowedBuildingsForPosition(index)} 
-                                    onBuild={handleBuild}
-                                    isBonusPhase={game.getRoundPhase() === "bonus"} />
-                            ))
-                        }
+                    <div className="order-1 flex w-full min-w-0 flex-col gap-3 sm:order-2">
+                        <div className="relative -mx-1 overflow-x-auto pb-2 sm:mx-0 sm:overflow-visible sm:pb-0">
+                            <div className="min-w-[420px] space-y-3 sm:min-w-0">
+                                <div className="flex gap-3 text-xs font-semibold tracking-[0.3em] text-foreground/65">
+                                    {[1, 2, 3, 4, 5, 6].map(column => {
+                                        const active = isColumnActive(column);
+                                        return (
+                                            <span
+                                                key={`column-${column}`}
+                                                className={clsx(
+                                                    "relative flex h-10 flex-1 items-center justify-center rounded-full bg-white/20 transition-all duration-300",
+                                                    active && "board-column-active board-column-active-label"
+                                                )}
+                                            >
+                                                {column}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                                <div className="board-grid grid aspect-[6/5] min-w-[420px] grid-cols-6 grid-rows-5 gap-2 p-3 sm:min-w-0">
+                                {
+                                    game.getBoard().map((building, index) => (
+                                        <Cell 
+                                            key={`building-${index}`} 
+                                            building={building} 
+                                            position={index} 
+                                            allowedBuildings={getAllowedBuildingsForPosition(index)} 
+                                            onBuild={handleBuild}
+                                            isBonusPhase={game.getRoundPhase() === "bonus"} />
+                                    ))
+                                }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

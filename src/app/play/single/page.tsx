@@ -1,22 +1,19 @@
 "use client";
 
-import Cell from "@/components/Building/Cell";
-import BuildingComponent from "@/components/Building/Cell";
 import RollingVillage from "@/game/RollingVillage";
-import Image from "next/image";
 import { useEffect, useState, useReducer } from "react";
 import Board from "@/components/Board/Board";
 import Score from "@/components/Score/Score";
 import Dice from "@/game/Dice";
 import Link from "next/link";
 import RemainingBuildings from "@/components/Board/RemainingBuildings";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { MoveLeft } from "lucide-react";
 import GameState from "@/components/Board/GameState";
 
 function Game() {
     const [, forceRerender] = useReducer(x => x + 1, 0);
-    const [game, setGame] = useState(new RollingVillage());
+    const [game] = useState(() => new RollingVillage());
 
     useEffect(() => {
       let active = true;
@@ -34,35 +31,34 @@ function Game() {
     }, [game]);
 
   return (
-    <div className="min-h-screen w-full p-4">
-      
-        <Link href="/">
-          <Button variant="outline"> <MoveLeft size={10}/> Menu</Button>
-        </Link>
-
-        {/* 
-          <h1>Rolling Village</h1>
-          <h3>Faza gry: {game.getGamePhase()}</h3>
-          <h3>Faza rundy: {game.getRoundPhase()}</h3>
-          <h3>Stan kostki: {game.getDiceRoll().join(", ")}</h3>
-          <h3>Runda: {game.getRound()}</h3> 
-        */}
-
-        <div className="flex justify-center my-4">
-          <GameState game={game}/>
+    <div className="min-h-screen w-full px-4 py-6 sm:px-6 lg:px-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+        <div className="flex items-center justify-between">
+          <Link href="/">
+            <Button variant="outline" size="sm" className="uppercase tracking-[0.3em]">
+              <MoveLeft size={16} /> Menu
+            </Button>
+          </Link>
+          <p className="parchment-title hidden text-[0.65rem] sm:block">Nowa planszowa odsłona Rolling Village</p>
         </div>
 
-        <div className="flex flex-col items-center gap-6 w-full max-w-[768px] mx-auto">
-          <div className="w-full flex justify-center gap-10">
-            <Board game={game}/>
-            <RemainingBuildings game={game}/>
-          </div>
-          <div className="w-full flex justify-center">
-            <Score game={game}/>
+        <div className="board-paper p-5">
+          <div className="board-surface flex flex-col gap-6">
+            <div className="flex justify-center">
+              <GameState game={game} />
+            </div>
+
+            <div className="flex flex-col gap-8 lg:flex-row">
+              <Board game={game} />
+              <RemainingBuildings game={game} />
+            </div>
+
+            <div className="flex justify-center">
+              <Score game={game} />
+            </div>
           </div>
         </div>
-        
-        
+      </div>
     </div>
   );
 }

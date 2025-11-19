@@ -1,11 +1,6 @@
 "use client";
 
-import Cell from "@/components/Building/Cell";
-import BuildingComponent from "@/components/Building/Cell";
 import RollingVillage from "@/game/RollingVillage";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useReducer } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import {RotateCcw, ListCollapse, List} from "lucide-react"
+import {RotateCcw, ListCollapse} from "lucide-react"
 
 type Props = {
     game: RollingVillage
@@ -24,57 +19,66 @@ type Props = {
 const NUMBER_OF_ROUNDS = 9;
 
 function Score(props: Props){
-    const [, forceRerender] = useReducer(x => x + 1, 0);
     const { game } = props;
 
 
     const pointsSummary = game.getPointsSummary();
 
     return (
-        <div className="w-full flex-col flex items-center">
-            <div className="grid grid-cols-9 w-full max-w-[512px] border">
-                {
-                    new Array(NUMBER_OF_ROUNDS).fill(null).map((_, index) => (
-                        <div key={`score-round-${index}-header`} className="aspect-square border flex items-center justify-center">
-                            {index+1}
+        <div className="flex w-full flex-col items-center gap-4">
+            <div className="w-full max-w-3xl rounded-[2rem] border-4 border-white/30 bg-gradient-to-b from-white/80 to-white/65 p-4 shadow-[0_30px_40px_rgba(15,33,20,0.22)]">
+                <div className="parchment-title text-center text-[0.7rem] tracking-[0.45em]">Tabela punktów</div>
+                <div className="mt-4 grid grid-cols-9 gap-2">
+                    {new Array(NUMBER_OF_ROUNDS).fill(null).map((_, index) => (
+                        <div
+                            key={`score-round-${index}-header`}
+                            className="flex aspect-square items-center justify-center rounded-xl border border-white/50 bg-gradient-to-b from-[rgba(255,255,255,0.9)] to-[rgba(255,255,255,0.65)] text-xs font-black tracking-[0.3em] text-foreground/70"
+                        >
+                            {index + 1}
                         </div>
-                    ))
-                }
-                {
-                    Object.values(game.getPoints()).map((value, index) => (
-                        <div key={`score-round-${index}`} className="aspect-square border flex items-center justify-center">
+                    ))}
+                    {Object.values(game.getPoints()).map((value, index) => (
+                        <div
+                            key={`score-round-${index}`}
+                            className="flex aspect-square items-center justify-center rounded-xl border border-foreground/10 bg-[rgba(93,143,76,0.12)] text-lg font-semibold text-[color:var(--leaf-700)]"
+                        >
                             {value}
                         </div>
-                    ))
-                }
-                {
-                    (new Array(NUMBER_OF_ROUNDS - Object.values(game.getPoints()).length).fill(null)).map((_, index) => (
-                        <div key={`score-round-${index}`} className="aspect-square border flex items-center justify-center">
+                    ))}
+                    {new Array(NUMBER_OF_ROUNDS - Object.values(game.getPoints()).length).fill(null).map((_, index) => (
+                        <div
+                            key={`score-round-empty-${index}`}
+                            className="flex aspect-square items-center justify-center rounded-xl border border-dashed border-foreground/15 text-lg text-foreground/25"
+                        >
                             -
                         </div>
-                    ))
-                }
+                    ))}
+                </div>
             </div>
             {pointsSummary && (
-                <div className="flex gap-2 items-center">
+                <div className="flex flex-col items-center gap-3 text-center sm:flex-row">
                     <Dialog>
-                        <DialogTrigger asChild className="my-4">
-                            <Button variant="outline"><ListCollapse size={10}/> Szczegóły wyniku ({pointsSummary.total} pkt)</Button>
+                        <DialogTrigger asChild className="my-2">
+                            <Button variant="outline" size="lg" className="uppercase tracking-[0.3em]">
+                                <ListCollapse size={18}/> Szczegóły ({pointsSummary.total} pkt)
+                            </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="rounded-[1.5rem] border-4 border-white/30 bg-gradient-to-b from-white/95 to-white/80">
                             <DialogHeader>
-                                <DialogTitle className="text-xl">Szczegóły wyniku</DialogTitle>
-                                <DialogDescription className="mt-4 text-lg">
-                                    <span><b>Punkty z rund:</b> {pointsSummary.rounds}</span><br/>
-                                    <span><b>Punkty z fabryk:</b> {pointsSummary.factories}</span><br/>
-                                    <span><b>Punkty z placów:</b> {pointsSummary.plazas}</span><br/>
-                                    <span className="font-bold border-t border-t-2 mt-5 block">Suma punktów: {pointsSummary.total}</span><br/>
+                                <DialogTitle className="text-center text-2xl">Zestawienie punktów</DialogTitle>
+                                <DialogDescription className="mt-4 space-y-2 text-base text-foreground">
+                                    <p><b>Rundy:</b> {pointsSummary.rounds}</p>
+                                    <p><b>Fabryki:</b> {pointsSummary.factories}</p>
+                                    <p><b>Place:</b> {pointsSummary.plazas}</p>
+                                    <p className="mt-4 border-t border-dashed border-foreground/30 pt-2 text-lg font-bold">
+                                        Razem: {pointsSummary.total} pkt
+                                    </p>
                                 </DialogDescription>
                             </DialogHeader>
                         </DialogContent>
                     </Dialog>
-                    <Button variant="outline" onClick={() => game.reset()}>
-                        <RotateCcw size={10}/> Graj od nowa
+                    <Button variant="outline" onClick={() => game.reset()} className="uppercase tracking-[0.25em]">
+                        <RotateCcw size={16}/> Graj od nowa
                     </Button>
                 </div>
             )}

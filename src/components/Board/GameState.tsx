@@ -1,12 +1,6 @@
 "use client";
 
-import Cell from "@/components/Building/Cell";
-import BuildingComponent from "@/components/Building/Cell";
 import RollingVillage from "@/game/RollingVillage";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useReducer } from "react";
-import React from "react";
 import {Dice1, Dice2, Dice3, Dice4, Dice5, Dice6} from "lucide-react";
 
 type Props = {
@@ -19,22 +13,47 @@ function GameState(props: Props){
     const renderDice = () => {
         const diceRoll = game.getDiceRoll();
         return (
-            <div className="flex gap-1">
+            <div className="flex gap-2">
                 {diceRoll.map((value, index) => {
                     const DiceIcon = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6][value - 1];
-                    return <DiceIcon size={36} key={index} />;
+                    return (
+                        <div
+                            key={index}
+                            className="flex size-12 items-center justify-center rounded-2xl border-2 border-white/40 bg-white/80 shadow-[0_15px_20px_rgba(32,49,28,0.15)]"
+                        >
+                            <DiceIcon size={26} className="text-[color:var(--leaf-700)]" />
+                        </div>
+                    );
                 })}
             </div>
         );
     };
 
     return (
-        <div className="flex flex-col gap-1 border p-5">
-            <h1 className="w-full text-center font-bold text-lg">Runda: {game.getRound()}</h1>
-            <h2 className="w-full text-center flex flex-col items-center justify-center">Kości: <span>{renderDice()}</span></h2>
-            {game.getIsAwaitingPlayerAction()  && <h2>Oczekiwanie na Twój ruch</h2>}
-            {game.getRoundPhase() === "bonus" && <h2>Postaw swój bonusowy budynek!</h2>}
-            {game.getGamePhase() === "gameover" && <h2>Gra zakończona! Twój wynik końcowy to <b>{game.getPointsSummary()?.total} punkty</b>.</h2>}
+        <div className="w-full max-w-xl rounded-[1.75rem] border-4 border-white/30 bg-gradient-to-b from-white/70 via-white/80 to-white/60 p-6 text-center shadow-[0_25px_45px_rgba(14,35,18,0.25)]">
+            <p className="parchment-title text-[0.65rem]">Aktualna runda</p>
+            <h1 className="text-3xl font-semibold text-[color:var(--leaf-700)]">Runda {game.getRound()} / 9</h1>
+            <div className="mt-5 flex flex-col items-center gap-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.4em] text-foreground/70">Kości</span>
+                {renderDice()}
+            </div>
+            <div className="mt-5 flex flex-wrap justify-center gap-3 text-sm font-semibold">
+                {game.getIsAwaitingPlayerAction() && (
+                    <span className="rounded-full border border-foreground/20 bg-foreground/5 px-4 py-1 tracking-wide">
+                        Twój ruch
+                    </span>
+                )}
+                {game.getRoundPhase() === "bonus" && (
+                    <span className="rounded-full border border-foreground/20 bg-[rgba(255,223,139,0.4)] px-4 py-1">
+                        Bonusowy budynek
+                    </span>
+                )}
+                {game.getGamePhase() === "gameover" && (
+                    <span className="rounded-full border border-foreground/20 bg-[rgba(93,143,76,0.25)] px-4 py-1">
+                        Wynik: {game.getPointsSummary()?.total} pkt
+                    </span>
+                )}
+            </div>
         </div>
     )
 }

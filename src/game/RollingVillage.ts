@@ -153,20 +153,20 @@ class RollingVillage {
     }
 
     public deserialize(serialized: string | Partial<SerializedRollingVillageState>): void {
-        const isBuilding = (b: any): b is Building =>
+        const isBuilding = (b: unknown): b is Building =>
             b === null || b === "house" || b === "forest" || b === "lake" || b === "factory" || b === "plaza";
-        const isBonusBuilding = (b: any): b is Building =>
+        const isBonusBuilding = (b: unknown): b is Building =>
             b === "house" || b === "forest" || b === "lake";
-        const isGamePhase = (p: any): p is GamePhase =>
+        const isGamePhase = (p: unknown): p is GamePhase =>
             p === "setup" || p === "main" || p === "gameover";
-        const isRoundPhase = (p: any): p is RoundPhase =>
+        const isRoundPhase = (p: unknown): p is RoundPhase =>
             p === "build" || p === "bonus" || p === "calculate";
 
         let state: Partial<SerializedRollingVillageState>;
         if (typeof serialized === "string") {
             try {
                 state = JSON.parse(serialized);
-            } catch (e) {
+            } catch {
                 throw new Error("Invalid JSON provided to deserialize");
             }
         } else {
@@ -196,7 +196,7 @@ class RollingVillage {
 
         // dice
         const dice = state.diceRoll;
-        const validDie = (n: any) => Number.isInteger(n) && n >= 1 && n <= 6;
+        const validDie = (n: unknown): n is number => typeof n === "number" && Number.isInteger(n) && n >= 1 && n <= 6;
         this.diceRoll =
             Array.isArray(dice) && dice.length === 2 && validDie(dice[0]) && validDie(dice[1])
                 ? (dice as DiceRoll)
@@ -208,13 +208,19 @@ class RollingVillage {
         this.isAwaitingDiceRoll = typeof state.isAwaitingDiceRoll === "boolean" ? state.isAwaitingDiceRoll : true;
 
         // placements
-        const sanitizePlacements = (arr: any): BuildingPlacement[] => {
+        const sanitizePlacements = (arr: unknown): BuildingPlacement[] => {
             if (!Array.isArray(arr)) return [];
-            return arr
-                .filter(p => p && isBuilding(p.building) && p.building !== null && Number.isInteger(p.column))
+            return (arr as Partial<BuildingPlacement>[])
+                .filter((p): p is BuildingPlacement => {
+                    if (!p || typeof p !== "object") return false;
+                    const hasBuilding = "building" in p && isBuilding(p.building);
+                    const columnValue = (p as { column?: unknown }).column;
+                    const hasColumn = typeof columnValue === "number" && Number.isInteger(columnValue);
+                    return hasBuilding && hasColumn;
+                })
                 .map(p => ({
-                    building: p.building as Building,
-                    column: Math.max(1, Math.min(this.ROW_WIDTH, p.column as number))
+                    building: p.building,
+                    column: Math.max(1, Math.min(this.ROW_WIDTH, p.column))
                 }));
         };
         this.allowedPlacements = sanitizePlacements(state.allowedPlacements);
@@ -226,7 +232,7 @@ class RollingVillage {
 
         // points summary
         const ps = state.pointsSummary;
-        const isNum = (n: any) => typeof n === "number" && Number.isFinite(n);
+        const isNum = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n);
         this.pointsSummary =
             ps && isNum(ps.rounds) && isNum(ps.factories) && isNum(ps.plazas) && isNum(ps.total)
                 ? { rounds: ps.rounds, factories: ps.factories, plazas: ps.plazas, total: ps.total }
@@ -597,8 +603,8 @@ class RollingVillage {
 
     private summarizePoints(): PointsSummary {
         let roundsPoints = 0;
-        let factoriesPoints = this.calculateFactoriesPoints();
-        let plazasPoints = this.calculatePlazasPoints();
+        const factoriesPoints = this.calculateFactoriesPoints();
+        const plazasPoints = this.calculatePlazasPoints();
 
         for(const round in this.points){
             roundsPoints += this.points[round];

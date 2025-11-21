@@ -118,3 +118,234 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* === ROLLING VILLAGE CUSTOM STYLES === */
+
+body {
+  font-family: 'Architects Daughter', cursive;
+  background-color: #5D4037;
+  background-image: 
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 8px),
+    radial-gradient(circle at center, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
+  user-select: none;
+}
+
+.zoom-container {
+  transform: scale(1.0);
+  transform-origin: center center;
+  transition: transform 0.5s ease;
+}
+
+@media (max-height: 1000px) {
+  .zoom-container {
+    transform: scale(0.90);
+  }
+}
+
+@media (max-height: 900px) {
+  .zoom-container {
+    transform: scale(0.80);
+  }
+}
+
+@media (max-height: 800px) {
+  .zoom-container {
+    transform: scale(0.70);
+  }
+}
+
+.graph-paper {
+  background-color: #fdfbf7;
+  transition: background-image 0.3s;
+  box-shadow: 2px 2px 15px rgba(0,0,0,0.3);
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(100, 149, 237, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 149, 237, 0.3) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.tape {
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  position: absolute;
+  width: 90px;
+  height: 30px;
+  transform: rotate(-45deg);
+  border-left: 2px dotted rgba(0,0,0,0.1);
+  border-right: 2px dotted rgba(0,0,0,0.1);
+  backdrop-filter: blur(1px);
+  z-index: 10;
+}
+
+#notebook-panel {
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.notebook-closed {
+  background-color: #2c3e50 !important;
+  border-left: 12px solid #1a252f !important;
+  color: white !important;
+}
+
+.notebook-open {
+  background-color: white;
+}
+
+.grid-cell {
+  border: 2px dashed rgba(0,0,0,0.1);
+  transition: background-color 0.2s;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+.grid-cell:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.coffee-mug {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  border: 8px solid #dcdcdc;
+  position: relative; 
+  box-shadow: 10px 10px 25px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.coffee-inner {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #3e2723;
+  border: 5px solid #5d4037;
+  overflow: hidden;
+  position: relative;
+}
+.coffee-inner::after {
+  content: '';
+  position: absolute;
+  top: 20px; left: 20px;
+  width: 35px; height: 18px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  transform: rotate(-45deg);
+}
+.coffee-stain {
+  position: absolute;
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  border: 14px solid rgba(62, 39, 35, 0.15);
+  filter: blur(5px);
+  top: -10px; left: -10px;
+  pointer-events: none; z-index: 0;
+}
+
+.pencil-decoration, .compass-decoration {
+  position: absolute;
+  filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.3));
+  z-index: 5;
+}
+.compass-decoration { z-index: 4; }
+
+.binder-page-horizontal {
+  background-color: #fafafa;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+  position: relative;
+  border-top: 35px solid #f3f4f6; 
+  font-family: 'Patrick Hand', cursive;
+  padding-top: 15px;
+}
+.binder-page-horizontal::before {
+  content: '';
+  position: absolute;
+  top: -35px; left: 0;
+  width: 100%; height: 35px;
+  background-image: radial-gradient(circle, #5D4037 7px, transparent 8px);
+  background-size: 30px 30px;
+  background-repeat: repeat-x;
+  background-position: 18px center; 
+}
+
+.calendar-cell {
+  border: 1px solid #e5e7eb;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.calendar-cell-number {
+  position: absolute; top: 0px; left: 4px;
+  font-size: 0.7rem; color: #9ca3af;
+}
+.calendar-cell-highlight { background-color: #fef3c7; }
+
+.menu-btn {
+  background: transparent;
+  border: 3px solid #333;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  color: #333;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.menu-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+  transform: scale(1.05) rotate(-1deg);
+  border-color: #000;
+}
+
+.sketch-input {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid #333;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.5rem;
+  color: #1a202c;
+  width: 100%;
+  padding: 5px 10px;
+  outline: none;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.sketch-input:focus {
+  border-bottom-color: #2563eb;
+}
+.sketch-input::placeholder {
+  color: #9ca3af;
+  opacity: 0.7;
+}
+
+.game-logo {
+  font-family: 'Rock Salt', cursive;
+  color: #2c3e50;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.hidden-content {
+  display: none !important;
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+.ruler-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-bottom: 0;
+}

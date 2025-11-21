@@ -1,21 +1,7 @@
 "use client";
 
-import Cell from "@/components/Building/Cell";
-import BuildingComponent from "@/components/Building/Cell";
 import RollingVillage from "@/game/RollingVillage";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useReducer } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import {RotateCcw, ListCollapse, List} from "lucide-react"
+import {Dice1, Dice2, Dice3, Dice4, Dice5, Dice6} from "lucide-react";
 
 type Props = {
     game: RollingVillage
@@ -24,62 +10,52 @@ type Props = {
 const NUMBER_OF_ROUNDS = 9;
 
 function Score(props: Props){
-    const [, forceRerender] = useReducer(x => x + 1, 0);
     const { game } = props;
+    const points = game.getPoints();
 
-
-    const pointsSummary = game.getPointsSummary();
+    const renderDice = () => {
+        const diceRoll = game.getDiceRoll();
+        return (
+            <div className="flex gap-3 justify-center">
+                {diceRoll.map((value, index) => {
+                    const DiceIcon = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6][value - 1];
+                    return <DiceIcon size={48} key={index} className="text-gray-800" />;
+                })}
+            </div>
+        );
+    };
 
     return (
-        <div className="w-full flex-col flex items-center">
-            <div className="grid grid-cols-9 w-full max-w-[512px] border">
-                {
-                    new Array(NUMBER_OF_ROUNDS).fill(null).map((_, index) => (
-                        <div key={`score-round-${index}-header`} className="aspect-square border flex items-center justify-center">
-                            {index+1}
-                        </div>
-                    ))
-                }
-                {
-                    Object.values(game.getPoints()).map((value, index) => (
-                        <div key={`score-round-${index}`} className="aspect-square border flex items-center justify-center">
-                            {value}
-                        </div>
-                    ))
-                }
-                {
-                    (new Array(NUMBER_OF_ROUNDS - Object.values(game.getPoints()).length).fill(null)).map((_, index) => (
-                        <div key={`score-round-${index}`} className="aspect-square border flex items-center justify-center">
-                            -
-                        </div>
-                    ))
-                }
-            </div>
-            {pointsSummary && (
-                <div className="flex gap-2 items-center">
-                    <Dialog>
-                        <DialogTrigger asChild className="my-4">
-                            <Button variant="outline"><ListCollapse size={10}/> Szczegóły wyniku ({pointsSummary.total} pkt)</Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className="text-xl">Szczegóły wyniku</DialogTitle>
-                                <DialogDescription className="mt-4 text-lg">
-                                    <span><b>Punkty z rund:</b> {pointsSummary.rounds}</span><br/>
-                                    <span><b>Punkty z fabryk:</b> {pointsSummary.factories}</span><br/>
-                                    <span><b>Punkty z placów:</b> {pointsSummary.plazas}</span><br/>
-                                    <span className="font-bold border-t border-t-2 mt-5 block">Suma punktów: {pointsSummary.total}</span><br/>
-                                </DialogDescription>
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
-                    <Button variant="outline" onClick={() => game.reset()}>
-                        <RotateCcw size={10}/> Graj od nowa
-                    </Button>
+        <div className="flex flex-col gap-6 pt-10">
+            <div className="w-64 bg-yellow-200 shadow-lg transform rotate-2 p-6 flex flex-col gap-4" style={{clipPath: 'polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%)'}}>
+                <div className="text-center">
+                    <div className="text-sm text-gray-600 uppercase tracking-wide mb-1">Runda</div>
+                    <div className="text-5xl font-bold text-gray-800">{game.getRound()}</div>
                 </div>
-            )}
+                <div className="border-t-2 border-yellow-400 pt-3">
+                    <div className="text-sm text-gray-600 uppercase tracking-wide mb-2 text-center">Kostki</div>
+                    {renderDice()}
+                </div>
+            </div>
+
+            <div className="w-64 h-48 binder-page-horizontal transform -rotate-2 flex flex-col p-2">
+                <div className="text-center font-bold text-gray-600 mb-1 tracking-widest text-sm uppercase">Punkty</div>
+                <div className="grid grid-cols-3 grid-rows-3 gap-1 h-full w-full">
+                    {Array.from({ length: NUMBER_OF_ROUNDS }).map((_, index) => {
+                        const hasPoint = points[index + 1] !== undefined;
+                        return (
+                            <div 
+                                key={index} 
+                                className={`calendar-cell ${hasPoint ? 'calendar-cell-highlight' : 'bg-white'}`}
+                            >
+                                <span className="calendar-cell-number">{index + 1}</span>
+                                <span className="text-lg font-bold">{hasPoint ? points[index + 1] : '-'}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
-        
     )
 }
 

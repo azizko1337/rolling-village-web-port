@@ -73,27 +73,30 @@ function Cell (props: Props) {
     const isBuildingAllowed = props.allowedBuildings.filter(building => building).length > 0 && !props.building;
 
     return (
-        <div className={clsx("relative aspect-[1] border bg-background", isBuildingAllowed && "bg-yellow-200 cursor-pointer hover:bg-gray-200")}>
+        <div className={clsx(
+            "relative aspect-[1] border-2 border-dashed border-gray-300 bg-white/70 transition-all", 
+            isBuildingAllowed && "border-yellow-400 bg-yellow-100/50 cursor-pointer hover:bg-yellow-200/70 hover:border-yellow-500"
+        )}>
             <button 
                 className={clsx("w-full h-full relative", isBuildingAllowed && "cursor-pointer")}
                 disabled={!isBuildingAllowed}
                 onClick={handleClick}
             >
                 {props.building && (
-                    <Image src={buildingToImage(props.building)!} alt="Building" fill={true} />
+                    <Image src={buildingToImage(props.building)!} alt="Building" fill={true} className="p-1" />
                 )}
             </button>
             {
                 showMenu && (
                     <>
-                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[20] bg-card border p-2 rounded-lg">
-                            <h3 className="w-full text-center text-sm mb-2">Wybierz budynek</h3>
+                        <menu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[20] bg-white border-2 border-gray-800 p-3 rounded-lg shadow-2xl">
+                            <h3 className="w-full text-center text-sm mb-2 font-['Patrick_Hand'] text-xl">Wybierz budynek</h3>
                             <div className="flex gap-2">
                                 {
                                     Array.from(new Set(props.allowedBuildings)).map((building, index) => (
                                         <button 
                                             key={`select-building-${index}`} 
-                                            className="relative w-16 h-16 p-2 border rounded cursor-pointer hover:bg-gray-100"
+                                            className="relative w-16 h-16 p-2 border-2 border-gray-300 rounded cursor-pointer hover:bg-gray-100 hover:border-gray-500 transition"
                                             onClick={() => handleBuildingSelect(building)}
                                         >
                                             {buildingToImage(building) && (
@@ -115,13 +118,12 @@ function Cell (props: Props) {
             }
             {
                 MAP_POINTS[props.position as keyof typeof MAP_POINTS] && (
-                    <div className="absolute top-1 right-1 w-6 h-6 bg-white border rounded-full flex items-center justify-center text-xs font-bold">
+                    <div className="absolute top-1 right-1 w-6 h-6 bg-white border-2 border-gray-800 rounded-full flex items-center justify-center text-xs font-bold">
                         {MAP_POINTS[props.position as keyof typeof MAP_POINTS]}
                     </div>
                 )
             }
         </div>
-        
     )
 }
 

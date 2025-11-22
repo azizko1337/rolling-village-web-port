@@ -362,6 +362,12 @@ class RollingVillage {
         return this.remainingPlacements;
     }
 
+    public getScoredRow(): number | null {
+        if (this.gamePhase === "setup") return null;
+        const sum = this.diceRoll[0] + this.diceRoll[1];
+        return MAP_ROWS[sum as keyof typeof MAP_ROWS] ?? null;
+    }
+
     public isPlacementAllowed(building: Building, position: number): boolean {
         const column = (position % this.ROW_WIDTH) + 1; // Convert position to column (1-6)
         return this.remainingPlacements.some(

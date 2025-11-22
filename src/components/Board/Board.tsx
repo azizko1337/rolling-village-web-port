@@ -37,11 +37,17 @@ function Board(props: Props){
     return (
         <div className="flex w-full">
             <div className="flex flex-col pt-6 lg:pt-8 pr-1 lg:pr-2 text-xs lg:text-base text-gray-600 font-['Patrick_Hand']">
-                <span className="grow flex items-center justify-end">3, 4</span>
-                <span className="grow flex items-center justify-end">5, 6</span>
-                <span className="grow flex items-center justify-end">7</span>
-                <span className="grow flex items-center justify-end">8, 9</span>
-                <span className="grow flex items-center justify-end">10, 11</span>
+                {["3, 4", "5, 6", "7", "8, 9", "10, 11"].map((label, index) => (
+                    <span 
+                        key={index} 
+                        className={`grow flex items-center justify-end transition-colors duration-300 ${
+                            game.getScoredRow() === index ? "text-red-600 font-bold scale-110" : ""
+                        }`}
+                    >
+                        {game.getScoredRow() === index && <span className="mr-1">★</span>}
+                        {label}
+                    </span>
+                ))}
             </div>
             
             <div className="flex flex-col w-full">

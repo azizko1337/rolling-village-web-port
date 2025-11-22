@@ -154,6 +154,25 @@ class RollingVillage {
         this.board[position] = building;
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
+
+            if (this.getEmptyCellsInColumn(column) === 0) {
+                const blockedPlacements = this.remainingPlacements.filter(p => p.column === column);
+                if (blockedPlacements.length > 0) {
+                    const buildingsAffected = new Set(blockedPlacements.map(p => p.building));
+                    this.remainingPlacements = this.remainingPlacements.filter(p => p.column !== column);
+                    
+                    const alternativeCols = this.findAlternativeColumns(column);
+                    
+                    buildingsAffected.forEach(b => {
+                        alternativeCols.forEach(altCol => {
+                            const exists = this.remainingPlacements.some(p => p.building === b && p.column === altCol);
+                            if (!exists) {
+                                this.remainingPlacements.push({ building: b, column: altCol });
+                            }
+                        });
+                    });
+                }
+            }
         } else if(this.getIsFactorySituation()){
             this.remainingPlacements = this.remainingPlacements.filter(p => (p.column !== column && p.building !== building));
         } 
@@ -167,7 +186,7 @@ class RollingVillage {
                     this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building && p.column !== column));
                 }
             }else{
-                this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building || p.column !== column));
+                this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
             }
         }
         
@@ -293,12 +312,23 @@ class RollingVillage {
         }
 
         //Full column?
-        for(let i=1; i<this.ROW_WIDTH; i++){
-            const leftColumn = targetColumn - i;
-            const rightColumn = targetColumn + i;
+        for(let i=1; i<=this.ROW_WIDTH/2; i++){
+            let leftColumn = targetColumn - i;
+            if (leftColumn < 1) leftColumn += this.ROW_WIDTH;
 
-            const leftEmpty = (leftColumn >= 1) ? this.getEmptyCellsInColumn(leftColumn) : -1;
-            const rightEmpty = (rightColumn <= 6) ? this.getEmptyCellsInColumn(rightColumn) : -1;
+            let rightColumn = targetColumn + i;
+            if (rightColumn > this.ROW_WIDTH) rightColumn -= this.ROW_WIDTH;
+
+            // If we reached the opposite side (e.g. distance 3 in a 6-col grid), both point to same column
+            if (leftColumn === rightColumn) {
+                if (this.getEmptyCellsInColumn(leftColumn) > 0) {
+                    return [leftColumn];
+                }
+                continue;
+            }
+
+            const leftEmpty = this.getEmptyCellsInColumn(leftColumn);
+            const rightEmpty = this.getEmptyCellsInColumn(rightColumn);
 
             if (leftEmpty <= 0 && rightEmpty <= 0) {
                 continue;

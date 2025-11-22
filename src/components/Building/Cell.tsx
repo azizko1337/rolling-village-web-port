@@ -128,7 +128,7 @@ function Cell (props: Props) {
             }
             {
                 MAP_POINTS[props.position as keyof typeof MAP_POINTS] && (
-                    <div className="absolute top-1 right-1 w-6 h-6 bg-white border-2 border-gray-800 rounded-full flex items-center justify-center text-xs font-bold">
+                    <div className="absolute top-0.5 right-0.5 lg:top-1 lg:right-1 w-4 h-4 lg:w-6 lg:h-6 bg-white border-2 border-gray-800 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-bold z-10">
                         {MAP_POINTS[props.position as keyof typeof MAP_POINTS]}
                     </div>
                 )

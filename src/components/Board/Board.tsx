@@ -36,7 +36,7 @@ function Board(props: Props){
     
     return (
         <div className="flex w-full">
-            <div className="flex flex-col pt-8 pr-2 text-base text-gray-600 font-['Patrick_Hand']">
+            <div className="flex flex-col pt-6 lg:pt-8 pr-1 lg:pr-2 text-xs lg:text-base text-gray-600 font-['Patrick_Hand']">
                 <span className="grow flex items-center justify-end">3, 4</span>
                 <span className="grow flex items-center justify-end">5, 6</span>
                 <span className="grow flex items-center justify-end">7</span>
@@ -45,7 +45,7 @@ function Board(props: Props){
             </div>
             
             <div className="flex flex-col w-full">
-                <div className="flex h-8 mb-1 text-base text-gray-600 font-['Patrick_Hand']">
+                <div className="flex h-6 lg:h-8 mb-1 text-xs lg:text-base text-gray-600 font-['Patrick_Hand']">
                     <span className="grow flex items-center justify-center">1</span>
                     <span className="grow flex items-center justify-center">2</span>
                     <span className="grow flex items-center justify-center">3</span>

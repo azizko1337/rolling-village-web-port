@@ -14,7 +14,7 @@ function RemainingBuildings(props: Props){
         const pointsSummary = game.getPointsSummary();
         
         return (
-            <div className="w-[400px] shrink-0 h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
+            <div className="w-full max-w-[400px] shrink-0 h-[500px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
                 <div className="absolute -left-7 top-0 bottom-0 w-10 flex flex-col justify-evenly z-10">
                     {[...Array(6)].map((_, i) => (
                         <div key={i} className="w-8 h-3 bg-gray-600 rounded-full mb-2 ml-2 ring-1 ring-black"></div>
@@ -82,7 +82,7 @@ function RemainingBuildings(props: Props){
     };
 
     return (
-        <div className="w-[400px] shrink-0 h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
+        <div className="w-full max-w-[400px] shrink-0 h-[400px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
             <div className="absolute -left-7 top-0 bottom-0 w-10 flex flex-col justify-evenly z-10">
                 {[...Array(6)].map((_, i) => (
                     <div key={i} className="w-8 h-3 bg-gray-600 rounded-full mb-2 ml-2 ring-1 ring-black"></div>

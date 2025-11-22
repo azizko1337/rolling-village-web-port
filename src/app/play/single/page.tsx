@@ -8,6 +8,7 @@ import Dice from "@/game/Dice";
 import RemainingBuildings from "@/components/Board/RemainingBuildings";
 import RollingVillage from "@/game/RollingVillage";
 import { CoffeeMug, Ruler, Pencil1, Pencil2, Compass, Triangle } from "@/components/ui/Decorations";
+import { Button } from "@/components/ui/button";
 
 function Game() {
     const [, forceRerender] = useReducer(x => x + 1, 0);
@@ -65,8 +66,26 @@ function Game() {
               </h1>
             </div>
 
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center flex-col gap-4">
                <Board game={game} />
+               
+               <div className="flex gap-4 z-50">
+                  <Button 
+                      onClick={() => game.undo()} 
+                      disabled={!game.canUndo()}
+                      variant="secondary"
+                      className="w-32"
+                  >
+                      Cofnij
+                  </Button>
+                  <Button 
+                      onClick={() => game.confirm()} 
+                      disabled={!game.canConfirm()}
+                      className="w-32 bg-green-700 hover:bg-green-800 text-white"
+                  >
+                      Zatwierdź
+                  </Button>
+               </div>
             </div>
 
 

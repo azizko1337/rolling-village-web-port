@@ -14,6 +14,14 @@ type PointsSummary = {
     total: number
 }
 
+type TurnSnapshot = {
+    board: Array<Building>;
+    remainingPlacements: BuildingPlacement[];
+    isFirstBuildingPlaced: boolean;
+    usedBonusBuildings: Set<Building>;
+    selectedRow: number | null;
+}
+
 const MAP_POINTS = { // { position: points }
     0: 3,
     2: 2,
@@ -63,6 +71,8 @@ class RollingVillage {
     private remainingPlacements: BuildingPlacement[] = [];
     private usedBonusBuildings: Set<Building> = new Set();
     private pointsSummary: PointsSummary | null = null;
+    private selectedRow: number | null = null;
+    private turnSnapshot: TurnSnapshot | null = null;
 
     // playing api
 
@@ -80,6 +90,8 @@ class RollingVillage {
         this.remainingPlacements = [];
         this.usedBonusBuildings = new Set();
         this.pointsSummary = null;
+        this.selectedRow = null;
+        this.turnSnapshot = null;
     }
 
     public tick(){
@@ -94,11 +106,17 @@ class RollingVillage {
             if(this.roundPhase === "build"){
                 this.roundPhase = "bonus";
                 if(this.round !== 0 && this.round%3 === 0){
-                    this.isAwaitingDiceRoll = true;
+                    this.saveSnapshot();
                     this.isAwaitingPlayerAction = true;
                 }
             } else if(this.roundPhase === "bonus"){
                 this.roundPhase = "calculate";
+                const sum = this.diceRoll[0] + this.diceRoll[1];
+                if (sum === 2 || sum === 12) {
+                    this.isAwaitingPlayerAction = true;
+                    this.selectedRow = null;
+                    this.saveSnapshot();
+                }
             } else if(this.roundPhase === "calculate"){
                 this.points[this.round] = this.calculatePoints();
                 
@@ -127,6 +145,11 @@ class RollingVillage {
         }
         
         if(this.roundPhase === "bonus") {
+            if (this.turnSnapshot && this.usedBonusBuildings.size > this.turnSnapshot.usedBonusBuildings.size) {
+                console.log("Only one bonus building allowed per bonus phase");
+                return;
+            }
+
             if(building && this.usedBonusBuildings.has(building)) {
                 console.log("This bonus building was already used");
                 return;
@@ -136,7 +159,7 @@ class RollingVillage {
             if(building) {
                 this.usedBonusBuildings.add(building);
             }
-            this.isAwaitingPlayerAction = false;
+            // this.isAwaitingPlayerAction = false; // Wait for confirm
             return;
         }
         
@@ -154,27 +177,8 @@ class RollingVillage {
         this.board[position] = building;
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
-
-            if (this.getEmptyCellsInColumn(column) === 0) {
-                const blockedPlacements = this.remainingPlacements.filter(p => p.column === column);
-                if (blockedPlacements.length > 0) {
-                    const buildingsAffected = new Set(blockedPlacements.map(p => p.building));
-                    this.remainingPlacements = this.remainingPlacements.filter(p => p.column !== column);
-                    
-                    const alternativeCols = this.findAlternativeColumns(column);
-                    
-                    buildingsAffected.forEach(b => {
-                        alternativeCols.forEach(altCol => {
-                            const exists = this.remainingPlacements.some(p => p.building === b && p.column === altCol);
-                            if (!exists) {
-                                this.remainingPlacements.push({ building: b, column: altCol });
-                            }
-                        });
-                    });
-                }
-            }
         } else if(this.getIsFactorySituation()){
-            this.remainingPlacements = this.remainingPlacements.filter(p => (p.column !== column && p.building !== building));
+            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
         } 
         else {
             if(this.gamePhase === "setup"){
@@ -186,12 +190,14 @@ class RollingVillage {
                     this.remainingPlacements = this.remainingPlacements.filter(p => (p.building !== building && p.column !== column));
                 }
             }else{
+                console.log(1)
                 this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
             }
         }
+        console.log(13)
         
         if(this.remainingPlacements.length === 0) {
-            this.isAwaitingPlayerAction = false;
+            // this.isAwaitingPlayerAction = false; // Wait for confirm
             this.isFirstBuildingPlaced = false;
         } else {
             this.isFirstBuildingPlaced = true;
@@ -210,6 +216,7 @@ class RollingVillage {
 
         this.allowedPlacements = this.calculateAllowedPlacements(diceRoll);
         this.remainingPlacements = [...this.allowedPlacements];
+        this.saveSnapshot();
     }
 
     // getters
@@ -218,7 +225,7 @@ class RollingVillage {
         const [dice1, dice2] = this.diceRoll;
         const building1 = this.diceValueToBuilding(dice1);
         const building2 = this.diceValueToBuilding(dice2);
-        return (building1 === building2 && this.gamePhase !== "setup");
+        return (dice1 !== dice2 && building1 === building2 && this.gamePhase !== "setup");
     }
 
     public getIsAwaitingPlayerAction(): boolean {
@@ -268,6 +275,9 @@ class RollingVillage {
     public getScoredRow(): number | null {
         if (this.gamePhase === "setup") return null;
         const sum = this.diceRoll[0] + this.diceRoll[1];
+        if (sum === 2 || sum === 12) {
+            return this.selectedRow;
+        }
         return MAP_ROWS[sum as keyof typeof MAP_ROWS] ?? null;
     }
 
@@ -279,6 +289,9 @@ class RollingVillage {
     }
 
     public getAvailableBonusBuildings(): Building[] {
+        if (this.turnSnapshot && this.usedBonusBuildings.size > this.turnSnapshot.usedBonusBuildings.size) {
+            return [];
+        }
         const allBuildings: Building[] = ["house", "forest", "lake"];
         return allBuildings.filter(b => !this.usedBonusBuildings.has(b));
     }
@@ -406,25 +419,33 @@ class RollingVillage {
         
 
         if (dice1 === dice2 && this.gamePhase !== "setup") {
-            const plazaPlacements: BuildingPlacement[] = [1, 2, 3, 4, 5, 6].map(col => ({
-                building: "plaza" as Building,
-                column: col
-            }));
+            const regularBuildingColumns = new Set(placements1.map(p => p.column));
+            const plazaPlacements: BuildingPlacement[] = [1, 2, 3, 4, 5, 6]
+                .filter(col => {
+                    if (regularBuildingColumns.has(col) && regularBuildingColumns.size === 1) {
+                        if (this.getEmptyCellsInColumn(col) === 1) {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .map(col => ({
+                    building: "plaza" as Building,
+                    column: col
+                }));
             
             return [...placements1, ...plazaPlacements];
         }else if(this.getIsFactorySituation()){
-            const factoryPlacements = [
-                {
-                    building: "factory" as Building,
-                    column: targetColumn1
-                },
-                {
-                    building: "factory" as Building,
-                    column: targetColumn2
-                }
-            ];
+            const factoryPlacements1 = alternativeColumns1.map(col => ({
+                building: "factory" as Building,
+                column: col
+            }));
+            const factoryPlacements2 = alternativeColumns2.map(col => ({
+                building: "factory" as Building,
+                column: col
+            }));
 
-            return [...placements1, ...placements2, ...factoryPlacements];
+            return [...placements1, ...placements2, ...factoryPlacements1, ...factoryPlacements2];
         }
 
         return [...placements1, ...placements2];
@@ -436,8 +457,8 @@ class RollingVillage {
         for(const position of Object.keys(this.board)){
             const building = this.board[parseInt(position)];
             if(building === "house" || building === "forest" || building === "lake"){
-                const row = MAP_ROWS[(this.diceRoll[0] + this.diceRoll[1]) as keyof typeof MAP_ROWS];
-                if(building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
+                const row = this.getScoredRow();
+                if(row !== null && building && this.isBuildingConnectedToRow(parseInt(position), building, row)){
                     points += MAP_POINTS[parseInt(position) as keyof typeof MAP_POINTS] || 0;
                 }
             }
@@ -560,6 +581,104 @@ class RollingVillage {
             (isColEdgeLeft(position) ? false : this.isBuildingConnectedToRow(position - 1, building, row, [..._alreadyCheckedPositions, position])) ||
             (isColEdgeRight(position) ? false : this.isBuildingConnectedToRow(position + 1, building, row, [..._alreadyCheckedPositions, position]))
         )
+    }
+
+    public selectRow(row: number) {
+        if (this.roundPhase !== "calculate") return;
+        const sum = this.diceRoll[0] + this.diceRoll[1];
+        if (sum !== 2 && sum !== 12) return;
+        
+        if (row < 0 || row >= this.ROWS) return;
+
+        this.selectedRow = row;
+        // this.isAwaitingPlayerAction = false; // Wait for confirm
+    }
+
+    public saveSnapshot(): void {
+        this.turnSnapshot = {
+            board: [...this.board],
+            remainingPlacements: [...this.remainingPlacements],
+            isFirstBuildingPlaced: this.isFirstBuildingPlaced,
+            usedBonusBuildings: new Set(this.usedBonusBuildings),
+            selectedRow: this.selectedRow
+        };
+    }
+
+    public undo(): void {
+        if (!this.turnSnapshot) return;
+        this.board = [...this.turnSnapshot.board];
+        this.remainingPlacements = [...this.turnSnapshot.remainingPlacements];
+        this.isFirstBuildingPlaced = this.turnSnapshot.isFirstBuildingPlaced;
+        this.usedBonusBuildings = new Set(this.turnSnapshot.usedBonusBuildings);
+        this.selectedRow = this.turnSnapshot.selectedRow;
+        this.isAwaitingPlayerAction = true;
+    }
+
+    public confirm(): void {
+        if (!this.isAwaitingPlayerAction) return;
+
+        // Check if we can confirm
+        if (this.roundPhase === "build") {
+            if (this.remainingPlacements.length === 0) {
+                this.isAwaitingPlayerAction = false;
+            }
+        } else if (this.roundPhase === "bonus") {
+             // In bonus phase, we just place one building (or none if we skip? logic says we place one)
+             // The build method for bonus phase adds to usedBonusBuildings.
+             // We can assume if the board state changed from snapshot, we did something.
+             // Or we can check if we placed a building.
+             // The current logic for bonus phase in `build` is:
+             // this.board[position] = building;
+             // this.usedBonusBuildings.add(building);
+             
+             // If we want to enforce that a building was placed:
+             // But maybe the user can skip? The original code didn't seem to allow skip explicitly, 
+             // but `build` was the only way to proceed.
+             // If `build` was called, `isAwaitingPlayerAction` was set to false.
+             // So we should check if an action was taken.
+             
+             // Simple check: has the board changed?
+             // Or just check if we are in a state where we *should* have acted.
+             
+             // Let's assume the user must perform the action.
+             // For bonus, `build` is called once.
+             // So if `turnSnapshot` differs from current state?
+             
+             // Actually, `build` modifies `usedBonusBuildings`.
+             if (this.usedBonusBuildings.size > this.turnSnapshot!.usedBonusBuildings.size) {
+                 this.isAwaitingPlayerAction = false;
+             }
+        } else if (this.roundPhase === "calculate") {
+            const sum = this.diceRoll[0] + this.diceRoll[1];
+            if (sum === 2 || sum === 12) {
+                if (this.selectedRow !== null) {
+                    this.isAwaitingPlayerAction = false;
+                }
+            }
+        }
+    }
+
+    public canUndo(): boolean {
+        return this.turnSnapshot !== null && this.isAwaitingPlayerAction;
+    }
+
+    public canConfirm(): boolean {
+        if (!this.isAwaitingPlayerAction) return false;
+
+        if (this.roundPhase === "build") {
+            return this.remainingPlacements.length === 0;
+        } else if (this.roundPhase === "bonus") {
+             // Assuming we must place a building in bonus phase if available
+             // If usedBonusBuildings size increased?
+             if (!this.turnSnapshot) return false;
+             return this.usedBonusBuildings.size > this.turnSnapshot.usedBonusBuildings.size;
+        } else if (this.roundPhase === "calculate") {
+            const sum = this.diceRoll[0] + this.diceRoll[1];
+            if (sum === 2 || sum === 12) {
+                return this.selectedRow !== null;
+            }
+        }
+        return false;
     }
 }
 

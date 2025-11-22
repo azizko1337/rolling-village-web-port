@@ -25,8 +25,17 @@ function Score(props: Props){
         );
     };
 
+    const isRowSelectionMode = game.getRoundPhase() === "calculate" && 
+                               game.getIsAwaitingPlayerAction() && 
+                               game.getScoredRow() === null;
+
     return (
         <div className="flex flex-row lg:flex-col gap-6 pt-0 lg:pt-10 flex-wrap justify-center">
+            {isRowSelectionMode && (
+                <div className="w-64 bg-red-100 border-2 border-red-400 p-4 text-center text-red-800 font-bold animate-pulse transform rotate-1 shadow-lg">
+                    Wybierz rząd do punktowania!
+                </div>
+            )}
             <div className="w-64 bg-yellow-200 shadow-lg transform rotate-2 p-6 flex flex-col gap-4" style={{clipPath: 'polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%)'}}>
                 <div className="text-center">
                     <div className="text-sm text-gray-600 uppercase tracking-wide mb-1">Runda</div>

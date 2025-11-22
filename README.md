@@ -3,8 +3,6 @@
 Port gry planszowej typu print&play na przeglądarkę. Stanowi on projekt zaliczeniowy na moduł PSAM.
 
 ## Todo:
-- [ ] sytuacja placu i pełnej kolumny
-- [ ] rząd do zliczenia gdy jest 1, 1 (wybiera się samemu)
 - [ ] pasek postępu gry
 - [ ] serwer, dodanie multiplayer (przy okazji implementacja zatwierdzania ruchów)
 

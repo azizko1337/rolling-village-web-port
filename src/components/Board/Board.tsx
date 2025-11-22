@@ -33,6 +33,17 @@ function Board(props: Props){
         
         return allowedBuildings;
     }
+
+    const isRowSelectionMode = game.getRoundPhase() === "calculate" && 
+                               game.getIsAwaitingPlayerAction() && 
+                               game.getScoredRow() === null;
+
+    function handleRowClick(index: number) {
+        if (isRowSelectionMode) {
+            game.selectRow(index);
+            forceRerender();
+        }
+    }
     
     return (
         <div className="flex w-full">
@@ -40,9 +51,10 @@ function Board(props: Props){
                 {["3, 4", "5, 6", "7", "8, 9", "10, 11"].map((label, index) => (
                     <span 
                         key={index} 
+                        onClick={() => handleRowClick(index)}
                         className={`grow flex items-center justify-end transition-colors duration-300 ${
                             game.getScoredRow() === index ? "text-red-600 font-bold scale-110" : ""
-                        }`}
+                        } ${isRowSelectionMode ? "cursor-pointer hover:text-blue-600 hover:font-bold hover:scale-105 animate-pulse text-blue-800" : ""}`}
                     >
                         {game.getScoredRow() === index && <span className="mr-1">★</span>}
                         {label}

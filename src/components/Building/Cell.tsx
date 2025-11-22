@@ -1,5 +1,6 @@
 
 import clsx from "clsx";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -32,10 +33,9 @@ const MAP_POINTS = {
 
 function Cell (props: Props) {
     const [showMenu, setShowMenu] = useState(false);
+    const uniqueBuildings = Array.from(new Set(props.allowedBuildings.filter(b => b)));
 
     function handleClick(){
-        const uniqueBuildings = Array.from(new Set(props.allowedBuildings));
-        
         if (props.isBonusPhase && uniqueBuildings.length > 0) {
             setShowMenu(true);
             return;
@@ -84,6 +84,16 @@ function Cell (props: Props) {
             >
                 {props.building && (
                     <Image src={buildingToImage(props.building)!} alt="Building" fill={true} className="p-1" />
+                )}
+                {!props.building && isBuildingAllowed && uniqueBuildings.length === 1 && (
+                    <div className="absolute inset-0 p-1 opacity-0 hover:opacity-50 transition-opacity duration-200">
+                        <Image src={buildingToImage(uniqueBuildings[0])!} alt="Preview" fill={true} />
+                    </div>
+                )}
+                {!props.building && isBuildingAllowed && uniqueBuildings.length > 1 && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-50 transition-opacity duration-200">
+                        <MoreHorizontal className="w-10 h-10 text-gray-800" />
+                    </div>
                 )}
             </button>
             {

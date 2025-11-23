@@ -40,7 +40,7 @@ function Game({
     }, [game]);
 
   return (
-    <div className="flex items-center justify-center relative min-h-screen overflow-auto lg:overflow-hidden bg-[#5D4037]">
+    <div className="flex items-center justify-center relative min-h-screen overflow-auto lg:overflow-hidden">
       <div className="hidden lg:block">
         <Ruler />
         <CoffeeMug />

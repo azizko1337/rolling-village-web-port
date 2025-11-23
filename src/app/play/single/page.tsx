@@ -11,13 +11,18 @@ import { CoffeeMug, Ruler, Pencil1, Pencil2, Compass, Triangle } from "@/compone
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Scroll, Trophy } from "lucide-react";
+import { use } from 'react'
 
-function Game() {
+function Game({
+  searchParams,
+}: {
+  searchParams: Promise<{ city?: string, architect?: string }>;
+}) {
     const [, forceRerender] = useReducer(x => x + 1, 0);
+    const params = use(searchParams)
     const [game, setGame] = useState(new RollingVillage());
-    const searchParams = useSearchParams();
-    const architect = searchParams.get('architect') || 'Architekt';
-    const city = searchParams.get('city') || 'Nowe Miasto';
+    const architect = params.architect || 'Architekt';
+    const city = params.city || 'Nowe Miasto';
 
     useEffect(() => {
       let active = true;

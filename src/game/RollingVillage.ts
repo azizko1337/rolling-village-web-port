@@ -548,8 +548,8 @@ class RollingVillage {
 
     private summarizePoints(): PointsSummary {
         let roundsPoints = 0;
-        let factoriesPoints = this.calculateFactoriesPoints();
-        let plazasPoints = this.calculatePlazasPoints();
+        const factoriesPoints = this.calculateFactoriesPoints();
+        const plazasPoints = this.calculatePlazasPoints();
 
         for(const round in this.points){
             roundsPoints += this.points[round];

@@ -14,39 +14,39 @@ function RemainingBuildings(props: Props){
         const pointsSummary = game.getPointsSummary();
         
         return (
-            <div className="w-full max-w-[400px] shrink-0 h-[500px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
+            <div className="w-[340px] sm:w-[400px] shrink-0 h-[500px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
                 <div className="absolute -left-7 top-0 bottom-0 w-10 flex flex-col justify-evenly z-10">
                     {[...Array(6)].map((_, i) => (
                         <div key={i} className="w-8 h-3 bg-gray-600 rounded-full mb-2 ml-2 ring-1 ring-black"></div>
                     ))}
                 </div>
 
-                <div className="p-4 h-full flex flex-col font-['Patrick_Hand'] text-black">
-                    <h2 className="text-3xl mb-2 border-b-2 border-gray-800 pb-2 text-center">Podsumowanie</h2>
+                <div className="p-3 sm:p-4 h-full flex flex-col font-['Patrick_Hand'] text-black">
+                    <h2 className="text-2xl sm:text-3xl mb-2 border-b-2 border-gray-800 pb-2 text-center">Podsumowanie</h2>
                     
                     <div className="flex-grow flex flex-col items-center justify-center gap-2">
                         <div className="text-center">
-                            <div className="text-6xl font-bold text-green-700 mb-1">{pointsSummary?.total}</div>
-                            <div className="text-2xl text-gray-600">punktów</div>
+                            <div className="text-5xl sm:text-6xl font-bold text-green-700 mb-1">{pointsSummary?.total}</div>
+                            <div className="text-xl sm:text-2xl text-gray-600">punktów</div>
                         </div>
                         
-                        <div className="w-full space-y-2 text-xl">
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
+                        <div className="w-full space-y-2 text-lg sm:text-xl">
+                            <div className="flex justify-between px-3 sm:px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Rundy:</span>
                                 <span className="font-bold">{pointsSummary?.rounds}</span>
                             </div>
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
+                            <div className="flex justify-between px-3 sm:px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Fabryki:</span>
                                 <span className="font-bold">{pointsSummary?.factories}</span>
                             </div>
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
+                            <div className="flex justify-between px-3 sm:px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Place:</span>
                                 <span className="font-bold">{pointsSummary?.plazas}</span>
                             </div>
                         </div>
 
-                        <div className="w-full px-4 mt-1">
-                            <div className="text-center text-lg font-bold mb-1 text-blue-800 uppercase tracking-wider">
+                        <div className="w-full px-2 sm:px-4 mt-1">
+                            <div className="text-center text-sm sm:text-lg font-bold mb-1 text-blue-800 uppercase tracking-wider">
                                 {(() => {
                                     const score = pointsSummary?.total || 0;
                                     if (score <= 60) return "zarządca chodników";
@@ -75,7 +75,7 @@ function RemainingBuildings(props: Props){
                         
                         <button 
                             onClick={() => game.reset()} 
-                            className="menu-btn text-xl py-2 border-4 hover:bg-green-50 mt-2"
+                            className="menu-btn text-lg sm:text-xl py-2 border-4 hover:bg-green-50 mt-2"
                         >
                             Zagraj jeszcze raz
                         </button>
@@ -110,30 +110,30 @@ function RemainingBuildings(props: Props){
     };
 
     return (
-        <div className="w-full max-w-[400px] shrink-0 h-[400px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
+        <div className="w-[340px] sm:w-[400px] shrink-0 h-[400px] lg:h-[600px] shadow-2xl relative transform -rotate-2 rounded-l-lg border-l-8 border-gray-300 flex flex-col notebook-open bg-white">
             <div className="absolute -left-7 top-0 bottom-0 w-10 flex flex-col justify-evenly z-10">
                 {[...Array(6)].map((_, i) => (
                     <div key={i} className="w-8 h-3 bg-gray-600 rounded-full mb-2 ml-2 ring-1 ring-black"></div>
                 ))}
             </div>
 
-            <div className="p-8 h-full flex flex-col font-['Patrick_Hand'] text-black overflow-auto">
-                <h2 className="text-4xl mb-4 border-b-2 border-gray-800 pb-2 text-center">Budynki</h2>
+            <div className="p-4 sm:p-8 h-full flex flex-col font-['Patrick_Hand'] text-black overflow-auto">
+                <h2 className="text-3xl sm:text-4xl mb-3 sm:mb-4 border-b-2 border-gray-800 pb-2 text-center">Budynki</h2>
                 
-                <div className="flex gap-2 border-b border-gray-400 pb-1 mb-4 text-gray-600 text-xl uppercase tracking-wide">
+                <div className="flex gap-2 border-b border-gray-400 pb-1 mb-3 sm:mb-4 text-gray-600 text-base sm:text-xl uppercase tracking-wide">
                     <span className="flex-1 text-center">Typ</span>
-                    <span className="w-24 text-center">Ulica</span>
+                    <span className="w-16 sm:w-24 text-center">Ulica</span>
                 </div>
 
                 <div className="space-y-2 flex-grow overflow-y-auto">
                     {game.getRoundPhase() === "bonus" ? (
                         <>
-                            <div className="text-center text-purple-600 font-bold mb-3 text-2xl">FAZA BONUSOWA!</div>
+                            <div className="text-center text-purple-600 font-bold mb-3 text-xl sm:text-2xl">FAZA BONUSOWA!</div>
                             {game.getAvailableBonusBuildings().map((building, index) => (
-                                <div key={index} className="flex items-center gap-2 w-full hover:bg-gray-50 p-1 rounded transition">
-                                    <div className="flex-1 flex items-center justify-start gap-3 border border-gray-300 rounded p-2 bg-white shadow-sm shrink-0">
+                                <div key={index} className="flex items-center gap-1 sm:gap-2 w-full hover:bg-gray-50 p-1 rounded transition">
+                                    <div className="flex-1 flex items-center justify-start gap-2 sm:gap-3 border border-gray-300 rounded p-1.5 sm:p-2 bg-white shadow-sm shrink-0">
                                         {building && buildingToImage(building) && (
-                                            <div className="w-10 h-10 relative">
+                                            <div className="w-8 h-8 sm:w-10 sm:h-10 relative">
                                                 <Image 
                                                     src={buildingToImage(building)} 
                                                     alt={buildingToName(building)} 
@@ -142,9 +142,9 @@ function RemainingBuildings(props: Props){
                                                 />
                                             </div>
                                         )}
-                                        <span className="text-2xl leading-none">{buildingToName(building)}</span>
+                                        <span className="text-lg sm:text-2xl leading-none">{buildingToName(building)}</span>
                                     </div>
-                                    <div className="w-24 flex items-center justify-center text-xl text-purple-600 font-bold">★</div>
+                                    <div className="w-16 sm:w-24 flex items-center justify-center text-lg sm:text-xl text-purple-600 font-bold">★</div>
                                 </div>
                             ))}
                         </>
@@ -166,10 +166,10 @@ function RemainingBuildings(props: Props){
                                     const displayColumns = sortedColumns.length === 6 ? '*' : sortedColumns.join(', ');
                                     
                                     return (
-                                        <div key={index} className="flex items-center gap-2 w-full hover:bg-gray-50 p-1 rounded transition">
-                                            <div className="flex-1 flex items-center justify-start gap-3 border border-gray-300 rounded p-2 bg-white shadow-sm shrink-0">
+                                        <div key={index} className="flex items-center gap-1 sm:gap-2 w-full hover:bg-gray-50 p-1 rounded transition">
+                                            <div className="flex-1 flex items-center justify-start gap-2 sm:gap-3 border border-gray-300 rounded p-1.5 sm:p-2 bg-white shadow-sm shrink-0">
                                                 {buildingToImage(building) && (
-                                                    <div className="w-10 h-10 relative">
+                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 relative">
                                                         <Image 
                                                             src={buildingToImage(building)} 
                                                             alt={buildingToName(building)} 
@@ -178,9 +178,9 @@ function RemainingBuildings(props: Props){
                                                         />
                                                     </div>
                                                 )}
-                                                <span className="text-2xl leading-none">{buildingToName(building)}</span>
+                                                <span className="text-lg sm:text-2xl leading-none">{buildingToName(building)}</span>
                                             </div>
-                                            <div className="w-24 flex items-center justify-center text-2xl font-bold text-gray-700">{displayColumns}</div>
+                                            <div className="w-16 sm:w-24 flex items-center justify-center text-lg sm:text-2xl font-bold text-gray-700">{displayColumns}</div>
                                         </div>
                                     );
                                 });

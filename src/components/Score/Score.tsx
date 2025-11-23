@@ -9,10 +9,7 @@ type Props = {
 
 const NUMBER_OF_ROUNDS = 9;
 
-function Score(props: Props){
-    const { game } = props;
-    const points = game.getPoints();
-
+export function RoundInfo({ game, className }: { game: RollingVillage, className?: string }) {
     const renderDice = () => {
         const diceRoll = game.getDiceRoll();
         return (
@@ -30,7 +27,7 @@ function Score(props: Props){
                                game.getScoredRow() === null;
 
     return (
-        <div className="flex flex-row lg:flex-col gap-6 pt-0 lg:pt-10 flex-wrap justify-center">
+        <div className={`flex flex-col gap-4 ${className}`}>
             {isRowSelectionMode && (
                 <div className="w-64 bg-red-100 border-2 border-red-400 p-4 text-center text-red-800 font-bold animate-pulse transform rotate-1 shadow-lg">
                     Wybierz rząd do punktowania!
@@ -46,24 +43,40 @@ function Score(props: Props){
                     {renderDice()}
                 </div>
             </div>
+        </div>
+    );
+}
 
-            <div className="w-64 h-48 binder-page-horizontal transform -rotate-2 flex flex-col p-2">
-                <div className="text-center font-bold text-gray-600 mb-1 tracking-widest text-sm uppercase">Punkty</div>
-                <div className="grid grid-cols-3 grid-rows-3 gap-1 h-full w-full">
-                    {Array.from({ length: NUMBER_OF_ROUNDS }).map((_, index) => {
-                        const hasPoint = points[index + 1] !== undefined;
-                        return (
-                            <div 
-                                key={index} 
-                                className={`calendar-cell ${hasPoint ? 'calendar-cell-highlight' : 'bg-white'}`}
-                            >
-                                <span className="calendar-cell-number">{index + 1}</span>
-                                <span className="text-lg font-bold">{hasPoint ? points[index + 1] : '-'}</span>
-                            </div>
-                        );
-                    })}
-                </div>
+export function ScoreTable({ game }: { game: RollingVillage }) {
+    const points = game.getPoints();
+    return (
+        <div className="w-64 h-48 binder-page-horizontal transform -rotate-2 flex flex-col p-2">
+            <div className="text-center font-bold text-gray-600 mb-1 tracking-widest text-sm uppercase">Punkty</div>
+            <div className="grid grid-cols-3 grid-rows-3 gap-1 h-full w-full">
+                {Array.from({ length: NUMBER_OF_ROUNDS }).map((_, index) => {
+                    const hasPoint = points[index + 1] !== undefined;
+                    return (
+                        <div 
+                            key={index} 
+                            className={`calendar-cell ${hasPoint ? 'calendar-cell-highlight' : 'bg-white'}`}
+                        >
+                            <span className="calendar-cell-number">{index + 1}</span>
+                            <span className="text-lg font-bold">{hasPoint ? points[index + 1] : '-'}</span>
+                        </div>
+                    );
+                })}
             </div>
+        </div>
+    );
+}
+
+function Score(props: Props){
+    const { game } = props;
+
+    return (
+        <div className="flex flex-row lg:flex-col gap-6 pt-0 lg:pt-10 flex-wrap justify-center">
+            <RoundInfo game={game} />
+            <ScoreTable game={game} />
         </div>
     )
 }

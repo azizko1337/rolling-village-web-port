@@ -136,21 +136,23 @@ body {
   transition: transform 0.5s ease;
 }
 
-@media (max-height: 1000px) {
-  .zoom-container {
-    transform: scale(0.90);
+@media (min-width: 1024px) {
+  @media (max-height: 1000px) {
+    .zoom-container {
+      transform: scale(0.90);
+    }
   }
-}
 
-@media (max-height: 900px) {
-  .zoom-container {
-    transform: scale(0.80);
+  @media (max-height: 900px) {
+    .zoom-container {
+      transform: scale(0.80);
+    }
   }
-}
 
-@media (max-height: 800px) {
-  .zoom-container {
-    transform: scale(0.70);
+  @media (max-height: 800px) {
+    .zoom-container {
+      transform: scale(0.70);
+    }
   }
 }
 

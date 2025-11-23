@@ -38,8 +38,8 @@ Aby zbudować i uruchomić obraz produkcyjny:
 docker build --target runner -t rolling-village-frontend .
 ```
 
-2. Uruchom kontener:
+2. Uruchom kontener (dodaj flagę -d aby uruchomić w tle):
 ```bash
-docker run -p 3020:3020 rolling-village-frontend
+docker run -d -p 3020:3020 rolling-village-frontend
 ```
 Aplikacja będzie dostępna pod adresem `http://localhost:3020`.

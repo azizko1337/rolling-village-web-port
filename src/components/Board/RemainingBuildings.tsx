@@ -21,39 +21,67 @@ function RemainingBuildings(props: Props){
                     ))}
                 </div>
 
-                <div className="p-8 h-full flex flex-col font-['Patrick_Hand'] text-black">
-                    <h2 className="text-4xl mb-6 border-b-2 border-gray-800 pb-2 text-center">Podsumowanie</h2>
+                <div className="p-4 h-full flex flex-col font-['Patrick_Hand'] text-black">
+                    <h2 className="text-3xl mb-2 border-b-2 border-gray-800 pb-2 text-center">Podsumowanie</h2>
                     
-                    <div className="flex-grow flex flex-col items-center justify-center gap-8">
+                    <div className="flex-grow flex flex-col items-center justify-center gap-2">
                         <div className="text-center">
-                            <div className="text-7xl font-bold text-green-700 mb-2">{pointsSummary?.total}</div>
-                            <div className="text-3xl text-gray-600">punktów</div>
+                            <div className="text-6xl font-bold text-green-700 mb-1">{pointsSummary?.total}</div>
+                            <div className="text-2xl text-gray-600">punktów</div>
                         </div>
                         
-                        <div className="w-full space-y-4 text-2xl">
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-2">
+                        <div className="w-full space-y-2 text-xl">
+                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Rundy:</span>
                                 <span className="font-bold">{pointsSummary?.rounds}</span>
                             </div>
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-2">
+                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Fabryki:</span>
                                 <span className="font-bold">{pointsSummary?.factories}</span>
                             </div>
-                            <div className="flex justify-between px-6 border-b border-gray-300 pb-2">
+                            <div className="flex justify-between px-6 border-b border-gray-300 pb-1">
                                 <span className="text-gray-600">Place:</span>
                                 <span className="font-bold">{pointsSummary?.plazas}</span>
+                            </div>
+                        </div>
+
+                        <div className="w-full px-4 mt-1">
+                            <div className="text-center text-lg font-bold mb-1 text-blue-800 uppercase tracking-wider">
+                                {(() => {
+                                    const score = pointsSummary?.total || 0;
+                                    if (score <= 60) return "zarządca chodników";
+                                    if (score <= 75) return "władca rond i placów zabaw";
+                                    if (score <= 90) return "szef wszystkiego po trochu";
+                                    return "wizjoner metropolii";
+                                })()}
+                            </div>
+                            <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden border border-gray-400 relative">
+                                <div 
+                                    className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-1000 ease-out"
+                                    style={{ width: `${Math.min(100, ((pointsSummary?.total || 0) / 100) * 100)}%` }}
+                                ></div>
+                                <div className="absolute top-0 bottom-0 left-[60%] w-0.5 bg-white/50 border-l border-gray-400/30" title="60"></div>
+                                <div className="absolute top-0 bottom-0 left-[75%] w-0.5 bg-white/50 border-l border-gray-400/30" title="75"></div>
+                                <div className="absolute top-0 bottom-0 left-[90%] w-0.5 bg-white/50 border-l border-gray-400/30" title="90"></div>
+                            </div>
+                            <div className="flex justify-between text-[10px] text-gray-500 mt-0.5 font-mono">
+                                <span>0</span>
+                                <span className="pl-8">60</span>
+                                <span className="pl-4">75</span>
+                                <span className="pl-2">90</span>
+                                <span>100+</span>
                             </div>
                         </div>
                         
                         <button 
                             onClick={() => game.reset()} 
-                            className="menu-btn text-2xl py-3 border-4 hover:bg-green-50 mt-6"
+                            className="menu-btn text-xl py-2 border-4 hover:bg-green-50 mt-2"
                         >
                             Zagraj jeszcze raz
                         </button>
                     </div>
                     
-                    <div className="mt-auto text-lg text-gray-500 text-center transform rotate-1">Gratulacje!</div>
+                    <div className="mt-2 text-base text-gray-500 text-center transform rotate-1">Gratulacje!</div>
                 </div>
             </div>
         );

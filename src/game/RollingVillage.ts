@@ -317,8 +317,9 @@ class RollingVillage {
         return count;
     }
 
-    private findAlternativeColumns(targetColumn: number): number[] {
-        const emptyCells = this.getEmptyCellsInColumn(targetColumn);
+    private findAlternativeColumns(targetColumn: number, reservedInColumn: Record<number, number> = {}): number[] {
+        const reserved = reservedInColumn[targetColumn] || 0;
+        const emptyCells = this.getEmptyCellsInColumn(targetColumn) - reserved;
         
         if (emptyCells > 0) {
             return [targetColumn];
@@ -334,14 +335,18 @@ class RollingVillage {
 
             // If we reached the opposite side (e.g. distance 3 in a 6-col grid), both point to same column
             if (leftColumn === rightColumn) {
-                if (this.getEmptyCellsInColumn(leftColumn) > 0) {
+                const reservedLeft = reservedInColumn[leftColumn] || 0;
+                if (this.getEmptyCellsInColumn(leftColumn) - reservedLeft > 0) {
                     return [leftColumn];
                 }
                 continue;
             }
 
-            const leftEmpty = this.getEmptyCellsInColumn(leftColumn);
-            const rightEmpty = this.getEmptyCellsInColumn(rightColumn);
+            const reservedLeft = reservedInColumn[leftColumn] || 0;
+            const reservedRight = reservedInColumn[rightColumn] || 0;
+
+            const leftEmpty = this.getEmptyCellsInColumn(leftColumn) - reservedLeft;
+            const rightEmpty = this.getEmptyCellsInColumn(rightColumn) - reservedRight;
 
             if (leftEmpty <= 0 && rightEmpty <= 0) {
                 continue;
@@ -393,10 +398,15 @@ class RollingVillage {
             }));
         }
         
+        const reserved: Record<number, number> = {};
+        if (this.gamePhase !== "setup" && alternativeColumns1.length === 1) {
+             const col = alternativeColumns1[0];
+             reserved[col] = (reserved[col] || 0) + 1;
+        }
 
         const building2 = this.diceValueToBuilding(dice2);
         const targetColumn2 = dice1;
-        const alternativeColumns2 = this.findAlternativeColumns(targetColumn2);
+        const alternativeColumns2 = this.findAlternativeColumns(targetColumn2, reserved);
         
         let placements2: BuildingPlacement[] = [];
         if(this.gamePhase === "setup"){

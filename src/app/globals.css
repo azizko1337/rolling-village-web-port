@@ -261,7 +261,7 @@ body {
   position: relative;
   border-top: 35px solid #f3f4f6; 
   font-family: 'Patrick Hand', cursive;
-  padding-top: 15px;
+  padding-top: 1px;
 }
 .binder-page-horizontal::before {
   content: '';
@@ -271,7 +271,7 @@ body {
   background-image: radial-gradient(circle, #5D4037 7px, transparent 8px);
   background-size: 30px 30px;
   background-repeat: repeat-x;
-  background-position: 18px center; 
+  background-position: 23px center; 
 }
 
 .calendar-cell {

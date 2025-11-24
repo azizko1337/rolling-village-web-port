@@ -47,7 +47,7 @@ function Board(props: Props){
     
     return (
         <div className="flex w-full">
-            <div className="flex flex-col pt-6 lg:pt-8 pr-1 lg:pr-2 text-xs lg:text-base text-gray-600 font-['Patrick_Hand']">
+            <div className="flex flex-col pt-6 lg:pt-8 pr-1 lg:pr-2 text-xs lg:text-base text-gray-600 font-['Patrick_Hand'] w-6 shrink-0">
                 {["3, 4", "5, 6", "7", "8, 9", "10, 11"].map((label, index) => (
                     <span 
                         key={index} 
@@ -62,7 +62,7 @@ function Board(props: Props){
                 ))}
             </div>
             
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col grow">
                 <div className="flex h-6 lg:h-8 mb-1 text-xs lg:text-base text-gray-600 font-['Patrick_Hand']">
                     <span className="grow flex items-center justify-center">1</span>
                     <span className="grow flex items-center justify-center">2</span>

@@ -26,7 +26,7 @@ Port gry planszowej typu print&play na przeglądarkę. Stanowi on projekt zalicz
 ### Tryb deweloperski
 Aby uruchomić projekt w trybie deweloperskim przy użyciu Docker Compose:
 ```bash
-docker-compose up
+docker compose up
 ```
 Aplikacja będzie dostępna pod adresem `http://localhost:3000`. Zmiany w kodzie będą automatycznie odświeżane (hot reload).
 

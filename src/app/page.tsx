@@ -62,7 +62,7 @@ export default function Home() {
                   <button className="menu-btn text-xl lg:text-2xl">Ustawienia</button>
                 </div>
                 
-                <div className="mt-auto text-gray-400 text-sm font-mono pt-8">v0.1.0 Prototyp</div>
+                <div className="mt-auto text-gray-400 text-sm font-mono pt-8">Antoni Załupka, Bartłomiej Marzec</div>
               </div>
             )}
 

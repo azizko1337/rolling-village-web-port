@@ -178,7 +178,7 @@ class RollingVillage {
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
         } else if(this.getIsFactorySituation()){
-            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
+            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building && p.column !== column);
         } 
         else {
             if(this.gamePhase === "setup"){

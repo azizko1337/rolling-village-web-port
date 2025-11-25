@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rolling Village",
-  description: "Gra architekta - zaplanuj przestrzeń swojego miasta",
+  title: "The Rolling Village",
+  description: "Port gry planszowej Print&Play The Rolling Village do przeglądarki.",
+  authors: [{ name: "Antoni Załupka", url: "https://azalupka.cc" }, {name: "Bartłomiej Marzec", url: "https://www.bartlomiejmarzec.pl/"},],
+  keywords: ["The Rolling Village", "Rolling Village", "gra planszowa", "board game", "print and play", "P&P", "planszówka", "planszowa", "game", "browser game", "web game"],
 };
 
 export default function RootLayout({

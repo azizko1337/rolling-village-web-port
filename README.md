@@ -33,13 +33,7 @@ Aplikacja będzie dostępna pod adresem `http://localhost:3000`. Zmiany w kodzie
 ### Budowanie i uruchamianie wersji produkcyjnej
 Aby zbudować i uruchomić obraz produkcyjny:
 
-1. Zbuduj obraz:
 ```bash
-docker build --target runner -t rolling-village-frontend .
-```
-
-2. Uruchom kontener (dodaj flagę -d aby uruchomić w tle):
-```bash
-docker run -d -p 3020:3020 rolling-village-frontend
+docker compose -f docker-compose.prod.yml up -d --build
 ```
 Aplikacja będzie dostępna pod adresem `http://localhost:3020`.

@@ -36,11 +36,18 @@ function Cell (props: Props) {
     const uniqueBuildings = Array.from(new Set(props.allowedBuildings.filter(b => b)));
 
     function handleClick(){
-        if (props.isBonusPhase && uniqueBuildings.length > 0) {
-            setShowMenu(true);
+        if (props.isBonusPhase) {
+            if (uniqueBuildings.length === 1 && uniqueBuildings[0]) {
+                props.onBuild(uniqueBuildings[0], props.position);
+                return;
+            }
+            if (uniqueBuildings.length > 1) {
+                setShowMenu(true);
+                return;
+            }
             return;
         }
-        
+
         if (uniqueBuildings.length === 1 && uniqueBuildings[0]) {
             props.onBuild(uniqueBuildings[0], props.position);
         } else if (uniqueBuildings.length > 1) {

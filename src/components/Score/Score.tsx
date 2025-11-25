@@ -51,7 +51,7 @@ export function ScoreTable({ game }: { game: RollingVillage }) {
     const points = game.getPoints();
     return (
         <div className="w-64 h-48 binder-page-horizontal transform -rotate-2 flex flex-col p-2">
-            <div className="text-center font-bold text-gray-600 mb-1 tracking-widest text-sm uppercase">Punkty</div>
+            <div className="text-center font-bold text-gray-600 mb-1 tracking-widest text-2xl uppercase">Punkty</div>
             <div className="grid grid-cols-3 grid-rows-3 gap-1 h-full w-full">
                 {Array.from({ length: NUMBER_OF_ROUNDS }).map((_, index) => {
                     const hasPoint = points[index + 1] !== undefined;

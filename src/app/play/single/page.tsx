@@ -40,7 +40,7 @@ function Game({
     }, [game]);
 
   return (
-    <div className="flex items-center justify-center relative min-h-screen overflow-auto lg:overflow-hidden bg-[#5D4037]">
+    <div className="flex items-center justify-center relative min-h-screen lg:max-h-screen overflow-auto lg:overflow-hidden">
       <div className="hidden lg:block">
         <Ruler />
         <CoffeeMug />
@@ -50,7 +50,7 @@ function Game({
         <Triangle />
       </div>
 
-      <div className="zoom-container flex flex-col lg:flex-row items-center gap-6 z-20 w-full min-h-screen lg:h-full p-0 lg:p-6 justify-center max-w-[1800px]">
+      <div className="zoom-container flex flex-col lg:flex-row items-center gap-6 z-20 w-full h-full p-0 lg:p-6 justify-center max-w-[1800px]">
         <div className="hidden lg:block order-2 lg:order-1">
           <RemainingBuildings game={game} />
         </div>

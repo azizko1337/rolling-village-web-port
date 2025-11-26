@@ -178,7 +178,12 @@ class RollingVillage {
         if(building === "plaza") {
             this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
         } else if(this.getIsFactorySituation()){
-            this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building && p.column !== column);
+            if(this.remainingPlacements.filter(p => p.building !== building && p.column !== column).length > 0){
+                this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building && p.column !== column);
+            }else {
+                this.remainingPlacements = this.remainingPlacements.filter(p => p.building !== building);
+            }
+            
         } 
         else {
             if(this.gamePhase === "setup"){
@@ -633,28 +638,8 @@ class RollingVillage {
                 this.isAwaitingPlayerAction = false;
             }
         } else if (this.roundPhase === "bonus") {
-             // In bonus phase, we just place one building (or none if we skip? logic says we place one)
-             // The build method for bonus phase adds to usedBonusBuildings.
-             // We can assume if the board state changed from snapshot, we did something.
-             // Or we can check if we placed a building.
-             // The current logic for bonus phase in `build` is:
-             // this.board[position] = building;
-             // this.usedBonusBuildings.add(building);
-             
-             // If we want to enforce that a building was placed:
-             // But maybe the user can skip? The original code didn't seem to allow skip explicitly, 
-             // but `build` was the only way to proceed.
-             // If `build` was called, `isAwaitingPlayerAction` was set to false.
-             // So we should check if an action was taken.
-             
-             // Simple check: has the board changed?
-             // Or just check if we are in a state where we *should* have acted.
-             
-             // Let's assume the user must perform the action.
-             // For bonus, `build` is called once.
-             // So if `turnSnapshot` differs from current state?
-             
-             // Actually, `build` modifies `usedBonusBuildings`.
+
+            
              if (this.usedBonusBuildings.size > this.turnSnapshot!.usedBonusBuildings.size) {
                  this.isAwaitingPlayerAction = false;
              }

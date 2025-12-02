@@ -139,6 +139,61 @@ Statyczna analiza kodu realizowana jest przez ESLint, którego konfiguracja znaj
 
 Organizacja kodu źródłowego odzwierciedla konwencje przyjęte w ekosystemie Next.js z wykorzystaniem App Router. Katalog główny \texttt{src/} zawiera cztery podkatalogi o ściśle określonych odpowiedzialnościach. Katalog \texttt{app/} stanowi rdzeń systemu routingu, gdzie struktura folderów bezpośrednio przekłada się na ścieżki URL aplikacji. Katalog \texttt{components/} grupuje wielokrotnie używane komponenty React, podzielone tematycznie na podkatalogi. Katalog \texttt{game/} zawiera logikę biznesową gry, całkowicie niezależną od warstwy prezentacji. Katalog \texttt{types/} przechowuje globalne definicje typów TypeScript, a \texttt{lib/} zawiera funkcje pomocnicze wykorzystywane w całej aplikacji.
 
+Poniżej przedstawiono pełną strukturę katalogów projektu:
+
+\begin{lstlisting}[caption={Struktura katalogów projektu}, label={lst:structure}]
+rolling-village/
+|-- Dockerfile
+|-- README.md
+|-- components.json
+|-- docker-compose.prod.yml
+|-- docker-compose.yml
+|-- eslint.config.mjs
+|-- next-env.d.ts
+|-- next.config.ts
+|-- package.json
+|-- postcss.config.mjs
+|-- tsconfig.json
+|-- document/
+|   |-- main.tex
+|-- public/
+|   |-- game/
+|       |-- building/
+|       |-- ui/
+|-- src/
+    |-- app/
+    |   |-- favicon.ico
+    |   |-- globals.css
+    |   |-- layout.tsx
+    |   |-- page.tsx
+    |   |-- api/
+    |   |   |-- rooms/
+    |   |-- play/
+    |       |-- multi/
+    |       |-- single/
+    |-- components/
+    |   |-- Board/
+    |   |   |-- Board.tsx
+    |   |   |-- GameState.tsx
+    |   |   |-- RemainingBuildings.tsx
+    |   |-- Building/
+    |   |   |-- Cell.tsx
+    |   |   |-- SelectBuildingMenu.tsx
+    |   |-- Score/
+    |   |   |-- Score.tsx
+    |   |-- ui/
+    |       |-- button.tsx
+    |       |-- Decorations.tsx
+    |       |-- dialog.tsx
+    |-- game/
+    |   |-- Dice.ts
+    |   |-- RollingVillage.ts
+    |-- lib/
+    |   |-- utils.ts
+    |-- types/
+        |-- types.d.ts
+\end{lstlisting}
+
 Struktura katalogów komponentów odzwierciedla logiczny podział interfejsu gry. Podkatalog \texttt{Board/} zawiera komponenty związane z planszą gry, w tym główny komponent \texttt{Board.tsx} renderujący siatkę oraz \texttt{GameState.tsx} odpowiedzialny za wyświetlanie stanu rozgrywki. Podkatalog \texttt{Building/} grupuje komponenty związane z budynkami, takie jak \texttt{Cell.tsx} reprezentujący pojedynczą komórkę planszy oraz \texttt{SelectBuildingMenu.tsx} służący do wyboru typu budynku. Podkatalog \texttt{Score/} zawiera komponent \texttt{Score.tsx} prezentujący punktację i informacje o rundzie. Podkatalog \texttt{ui/} przechowuje generyczne komponenty interfejsu pochodzące z shadcn/ui oraz niestandardowe elementy dekoracyjne.
 
 \subsection{Wzorzec architektoniczny}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.13)  2 DEC 2025 19:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.13)  2 DEC 2025 19:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -600,37 +600,39 @@ Overfull \hbox (2.92433pt too wide) in paragraph at lines 127--128
 \T1/cmr/m/n/12 Proces bu-do-wa-nia apli-ka-cji wy-ko-rzy-stuje Tur-bo-pack, co znaj-duje od-zwier-cie-dle-nie w skryp-
  []
 
-[3] [4] [5]
-Overfull \hbox (32.81851pt too wide) in paragraph at lines 187--188
+[3]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 144.
+ [4] [5] [6]
+Overfull \hbox (32.81851pt too wide) in paragraph at lines 242--243
 []\T1/cmr/m/n/12 Algorytm ob-li-cza-nia punk-tów, za-im-ple-men-to-wany w me-to-dzie pry-wat-nej \T1/cmtt/m/n/12 calculateScore()\T1/cmr/m/n/12 ,
  []
 
 
-Overfull \hbox (7.38374pt too wide) in paragraph at lines 195--196
+Overfull \hbox (7.38374pt too wide) in paragraph at lines 250--251
 \T1/cmr/m/n/12 plan-szy (\T1/cmtt/m/n/12 board\T1/cmr/m/n/12 ), po-zo-staªe do wy-ko-na-nia umiesz-cze-nia bu-dyn-ków (\T1/cmtt/m/n/12 remainingPlacements\T1/cmr/m/n/12 ),
  []
 
-[6]
-Overfull \hbox (99.24756pt too wide) in paragraph at lines 216--217
+[7]
+Overfull \hbox (99.24756pt too wide) in paragraph at lines 271--272
 \T1/cmr/m/n/12 Gªówny wi-dok gry ren-de-ro-wany jest przez kom-po-nent zde-fi-nio-wany w pliku \T1/cmtt/m/n/12 src/app/play/single/page.tsx\T1/cmr/m/n/12 .
  []
 
 
-Overfull \hbox (10.34076pt too wide) in paragraph at lines 220--221
+Overfull \hbox (10.34076pt too wide) in paragraph at lines 275--276
 []\T1/cmr/m/n/12 Komponent \T1/cmtt/m/n/12 RemainingBuildings.tsx \T1/cmr/m/n/12 pre-zen-tuje li-st¦ bu-dyn-ków do-st¦p-nych do umiesz-
  []
 
-[7] [8] [9] [10]
-Underfull \hbox (badness 1688) in paragraph at lines 306--309
+[8] [9] [10] [11]
+Underfull \hbox (badness 1688) in paragraph at lines 361--364
 []\T1/cmr/m/n/12 Tailwind Labs Inc. \T1/cmr/m/it/12 Ta-il-wind CSS Do-cu-men-ta-tion\T1/cmr/m/n/12 . Do-st¦pne on-line: [][]$\T1/cmtt/m/n/12 https : / /
  []
 
 
-Underfull \hbox (badness 2126) in paragraph at lines 316--319
+Underfull \hbox (badness 2126) in paragraph at lines 371--374
 []\T1/cmr/m/n/12 WorkOS. \T1/cmr/m/it/12 Ra-dix UI Pri-mi-ti-ves\T1/cmr/m/n/12 . Do-st¦pne on-line: [][]$\T1/cmtt/m/n/12 https : / / www . radix-[]ui . com /
  []
 
-[11] (./main.aux)
+[12] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -642,18 +644,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 19516 strings out of 474222
- 333995 string characters out of 5748733
- 1935975 words of memory out of 5000000
- 41534 multiletter control sequences out of 15000+600000
- 570013 words of font info for 58 fonts, out of 8000000 for 9000
+ 19839 strings out of 474222
+ 336849 string characters out of 5748733
+ 2110975 words of memory out of 5000000
+ 41803 multiletter control sequences out of 15000+600000
+ 571096 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,81p,855b,1710s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (12 pages, 259464 bytes).
+ 75i,6n,81p,855b,1982s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (13 pages, 296927 bytes).
 PDF statistics:
- 280 PDF objects out of 1000 (max. 8388607)
- 239 compressed objects within 3 object streams
- 45 named destinations out of 1000 (max. 500000)
+ 352 PDF objects out of 1000 (max. 8388607)
+ 307 compressed objects within 4 object streams
+ 97 named destinations out of 1000 (max. 500000)
  209 words of extra memory for PDF output out of 10000 (max. 10000000)
 

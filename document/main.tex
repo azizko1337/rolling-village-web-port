@@ -1,0 +1,327 @@
+\documentclass[12pt, a4paper]{article}
+
+% Kodowanie i język
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{polski}
+
+% Układ strony
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+% Grafika i kolory
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Hiperłącza
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+% Listingi kodu
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    showstringspaces=false
+}
+
+% Bibliografia
+\usepackage{biblatex}
+\addbibresource{bibliography.bib}
+
+% Formatowanie tytułów
+\usepackage{titlesec}
+
+\begin{document}
+
+% ============================================
+% STRONA TYTUŁOWA
+% ============================================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Large\textsc{Uniwersytet Śląski}}\\[0.3cm]
+    {\large\textsc{WNŚT}}\\[0.3cm]
+    {\large Kierunek: Informatyka}\\[2cm]
+    
+    \rule{\linewidth}{0.5mm}\\[0.4cm]
+    {\Huge\bfseries Projekt zaliczeniowy\\[0.3cm]
+    Rolling Village}\\[0.2cm]
+    {\large Webowa adaptacja gry planszowej}\\[0.1cm]
+    \rule{\linewidth}{0.5mm}\\[2cm]
+    
+    {\Large Projekt systemu - aplikacje multimedialne}\\[3cm]
+    
+    \begin{flushright}
+        {\large\textit{Autor:}}\\[0.2cm]
+        {\Large Antoni Załupka}\\[0.1cm]
+        {\Large Bartłomiej Marzec}\\[0.1cm]
+    \end{flushright}
+    
+    \vfill
+    
+    {\large Grudzień 2025}
+\end{titlepage}
+
+% ============================================
+% SPIS TREŚCI
+% ============================================
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================
+% 1. WSTĘP
+% ============================================
+\section{Wstęp}
+
+Niniejsze sprawozdanie przedstawia proces projektowania i implementacji aplikacji webowej stanowiącej cyfrową adaptację gry planszowej Rolling Village. Projekt został zrealizowany z wykorzystaniem nowoczesnych technologii frontendowych, ze szczególnym uwzględnieniem frameworka Next.js oraz biblioteki React. Głównym celem przedsięwzięcia było stworzenie interaktywnej, responsywnej aplikacji umożliwiającej rozgrywkę w trybie jednoosobowym, z zachowaniem oryginalnych mechanik gry planszowej.
+
+Rolling Village to gra strategiczna, w której gracze wcielają się w rolę architektów budujących własne miasto. Mechanika opiera się na rzutach kośćmi, które determinują dostępne budynki oraz lokalizacje na planszy. Gracz musi podejmować decyzje dotyczące optymalnego rozmieszczenia budynków, maksymalizując punkty końcowe. Cyfrowa wersja gry zachowuje wszystkie te elementy, jednocześnie oferując intuicyjny interfejs użytkownika oraz automatyzację obliczeń punktowych.
+
+Aplikacja została zaprojektowana z myślą o rozszerzalności, co przejawia się w przygotowanej strukturze katalogów dla trybu wieloosobowego. Sprawozdanie szczegółowo omawia zastosowany stack technologiczny, architekturę systemu, implementację kluczowych funkcjonalności oraz napotkane wyzwania techniczne wraz z przyjętymi rozwiązaniami.
+
+% ============================================
+% 2. STACK TECHNOLOGICZNY
+% ============================================
+\section{Stack technologiczny}
+
+\subsection{Framework i środowisko uruchomieniowe}
+
+Fundamentem aplikacji jest framework Next.js w wersji 15.5.4, reprezentujący nowoczesne podejście do budowania aplikacji React. Wybór tego frameworka podyktowany został jego zaawansowanymi możliwościami, w szczególności mechanizmem App Router wprowadzonym w wersji 13, który oferuje intuicyjny system routingu oparty na strukturze katalogów. Next.js zapewnia również wbudowane wsparcie dla renderowania po stronie serwera (SSR) oraz generowania statycznych stron (SSG), choć w przypadku niniejszego projektu wykorzystano głównie renderowanie po stronie klienta ze względu na interaktywny charakter gry.
+
+Aplikacja wykorzystuje React w wersji 19.1.0, stanowiącej najnowsze wydanie tej biblioteki. React 19 wprowadza szereg optymalizacji wydajnościowych oraz nowe hooki, które zostały wykorzystane przy implementacji logiki gry. Całość kodu źródłowego została napisana w języku TypeScript w wersji 5, co zapewnia statyczne typowanie i znacząco redukuje ryzyko wystąpienia błędów w czasie wykonania. Typowanie obejmuje zarówno komponenty React, jak i klasę silnika gry, definiując precyzyjne interfejsy dla wszystkich struktur danych.
+
+Środowisko deweloperskie wykorzystuje Turbopack, eksperymentalny bundler zintegrowany z Next.js, który oferuje znacznie szybsze czasy kompilacji w porównaniu do tradycyjnego Webpacka. Konfiguracja projektu obejmuje również ESLint do statycznej analizy kodu oraz Docker do konteneryzacji aplikacji zarówno w środowisku deweloperskim, jak i produkcyjnym.
+
+\subsection{Biblioteki interfejsu użytkownika}
+
+Warstwa prezentacji aplikacji została zbudowana w oparciu o system komponentów shadcn/ui, wykorzystujący styl wizualny określany jako \texttt{new-york}. Wybór ten podyktowany został eleganckim wyglądem komponentów oraz ich pełną dostępnością (accessibility). W odróżnieniu od tradycyjnych bibliotek komponentów, shadcn/ui dostarcza kod źródłowy komponentów bezpośrednio do projektu, co umożliwia ich pełną personalizację bez konieczności nadpisywania stylów zewnętrznej biblioteki.
+
+Fundamentem komponentów shadcn/ui są prymitywy Radix UI, zapewniające poprawną obsługę dostępności oraz interakcji użytkownika. W projekcie wykorzystano w szczególności komponent \texttt{Dialog} w wersji 1.1.15, służący do wyświetlania modalnych okien dialogowych na urządzeniach mobilnych, oraz \texttt{Slot} w wersji 1.2.4, umożliwiający kompozycję komponentów poprzez przekazywanie właściwości do elementów potomnych.
+
+Ikony w aplikacji pochodzą z biblioteki Lucide React w wersji 0.548.0, oferującej obszerny zestaw spójnych wizualnie ikon wektorowych. W kontekście gry planszowej szczególnie istotne okazały się ikony reprezentujące kostki do gry, wykorzystywane w interfejsie rzutu kośćmi.
+
+\subsection{System stylowania}
+
+Stylowanie aplikacji opiera się na frameworku Tailwind CSS w wersji 4, reprezentującym podejście utility-first do pisania stylów CSS. Podejście to polega na kompozycji małych, jednozadaniowych klas bezpośrednio w znacznikach JSX, co eliminuje konieczność tworzenia osobnych plików CSS i znacząco przyspiesza proces prototypowania interfejsu.
+
+Zarządzanie wariantami komponentów realizowane jest przy użyciu biblioteki class-variance-authority w wersji 0.7.1, która umożliwia definiowanie różnych stanów wizualnych komponentu w sposób deklaratywny i typowany. Komponent \texttt{Button} wykorzystuje tę bibliotekę do definiowania siedmiu wariantów: \texttt{default}, \texttt{destructive}, \texttt{outline}, \texttt{secondary}, \texttt{ghost} oraz \texttt{link}.
+
+Łączenie klas CSS w sposób bezpieczny i eliminujący konflikty realizowane jest przez kombinację bibliotek clsx w wersji 2.1.1 oraz tailwind-merge w wersji 3.3.1. Funkcja pomocnicza \texttt{cn()}, zdefiniowana w pliku \texttt{src/lib/utils.ts}, stanowi centralny punkt łączenia klas Tailwind w całej aplikacji. Animacje interfejsu użytkownika zostały zaimplementowane przy użyciu biblioteki tw-animate-css w wersji 1.4.0, oferującej zestaw predefiniowanych animacji kompatybilnych z Tailwind CSS.
+
+\subsection{Narzędzia deweloperskie i wdrożeniowe}
+
+Proces budowania aplikacji wykorzystuje Turbopack, co znajduje odzwierciedlenie w skryptach zdefiniowanych w pliku \texttt{package.json}. Polecenie \texttt{npm run dev} uruchamia serwer deweloperski z flagą \texttt{--turbopack}, natomiast \texttt{npm run build} kompiluje aplikację produkcyjną. Serwer produkcyjny nasłuchuje na porcie 3020, co zostało skonfigurowane w skrypcie \texttt{start}.
+
+Konteneryzacja aplikacji została zrealizowana przy użyciu Docker, z oddzielnymi konfiguracjami dla środowiska deweloperskiego (\texttt{docker-compose.yml}) oraz produkcyjnego (\texttt{docker-compose.prod.yml}). Plik \texttt{Dockerfile} definiuje wieloetapowy proces budowania obrazu, optymalizując rozmiar finalnego kontenera poprzez separację zależności deweloperskich od produkcyjnych.
+
+Statyczna analiza kodu realizowana jest przez ESLint, którego konfiguracja znajduje się w pliku \texttt{eslint.config.mjs}. Narzędzie to weryfikuje zgodność kodu ze zdefiniowanymi regułami stylistycznymi oraz wykrywa potencjalne problemy przed uruchomieniem aplikacji.
+
+% ============================================
+% 3. ARCHITEKTURA APLIKACJI
+% ============================================
+\section{Architektura aplikacji}
+
+\subsection{Struktura katalogów projektu}
+
+Organizacja kodu źródłowego odzwierciedla konwencje przyjęte w ekosystemie Next.js z wykorzystaniem App Router. Katalog główny \texttt{src/} zawiera cztery podkatalogi o ściśle określonych odpowiedzialnościach. Katalog \texttt{app/} stanowi rdzeń systemu routingu, gdzie struktura folderów bezpośrednio przekłada się na ścieżki URL aplikacji. Katalog \texttt{components/} grupuje wielokrotnie używane komponenty React, podzielone tematycznie na podkatalogi. Katalog \texttt{game/} zawiera logikę biznesową gry, całkowicie niezależną od warstwy prezentacji. Katalog \texttt{types/} przechowuje globalne definicje typów TypeScript, a \texttt{lib/} zawiera funkcje pomocnicze wykorzystywane w całej aplikacji.
+
+Struktura katalogów komponentów odzwierciedla logiczny podział interfejsu gry. Podkatalog \texttt{Board/} zawiera komponenty związane z planszą gry, w tym główny komponent \texttt{Board.tsx} renderujący siatkę oraz \texttt{GameState.tsx} odpowiedzialny za wyświetlanie stanu rozgrywki. Podkatalog \texttt{Building/} grupuje komponenty związane z budynkami, takie jak \texttt{Cell.tsx} reprezentujący pojedynczą komórkę planszy oraz \texttt{SelectBuildingMenu.tsx} służący do wyboru typu budynku. Podkatalog \texttt{Score/} zawiera komponent \texttt{Score.tsx} prezentujący punktację i informacje o rundzie. Podkatalog \texttt{ui/} przechowuje generyczne komponenty interfejsu pochodzące z shadcn/ui oraz niestandardowe elementy dekoracyjne.
+
+\subsection{Wzorzec architektoniczny}
+
+Aplikacja została zaprojektowana zgodnie z wzorcem Client-Side Game Engine, który zakłada ścisłą separację logiki gry od warstwy prezentacji. Centralnym elementem architektury jest klasa \texttt{RollingVillage}, zdefiniowana w pliku \texttt{src/game/RollingVillage.ts}, która enkapsuluje całą mechanikę gry w sposób całkowicie niezależny od frameworka React. Klasa ta liczy około 700 linii kodu i stanowi samodzielną jednostkę, którą można testować oraz wykorzystywać w izolacji.
+
+Komponenty React pełnią wyłącznie rolę warstwy prezentacyjnej, odpowiedzialnej za renderowanie aktualnego stanu gry oraz przekazywanie akcji użytkownika do silnika gry. Komunikacja między warstwami odbywa się poprzez wywoływanie publicznych metod klasy \texttt{RollingVillage}, takich jak \texttt{build()}, \texttt{tick()} czy \texttt{setRollDice()}, oraz odczytywanie stanu gry za pomocą getterów, na przykład \texttt{getRemainingPlacements()}, \texttt{getScore()} czy \texttt{getRoundPhase()}.
+
+Wzorzec ten zapewnia jednolite źródło prawdy (single source of truth) dla stanu gry, co eliminuje problemy związane z synchronizacją danych między komponentami. Każda zmiana stanu gry zachodzi wyłącznie poprzez metody klasy silnika, a komponenty jedynie reagują na te zmiany, renderując zaktualizowany interfejs.
+
+\subsection{System routingu aplikacji}
+
+Routing aplikacji wykorzystuje mechanizm App Router wprowadzony w Next.js 13, gdzie struktura katalogów w obrębie \texttt{src/app/} bezpośrednio definiuje dostępne ścieżki URL. Plik \texttt{layout.tsx} w katalogu głównym aplikacji definiuje wspólny układ strony, obejmujący konfigurację czcionek (Geist Sans i Geist Mono) oraz metadane dokumentu HTML.
+
+Strona główna aplikacji, dostępna pod adresem root (\texttt{/}), renderowana jest przez komponent zdefiniowany w pliku \texttt{src/app/page.tsx}. Stanowi ona punkt wejścia dla użytkownika, prezentując formularz inicjalizacji gry w stylistyce wniosku o pozwolenie na budowę.
+
+Tryb gry jednoosobowej dostępny jest pod ścieżką \texttt{/play/single}, której odpowiada plik \texttt{src/app/play/single/page.tsx}. Komponent ten zawiera pełną implementację widoku gry, włączając inicjalizację silnika, pętlę gry oraz renderowanie wszystkich elementów interfejsu.
+
+Struktura katalogów przewiduje również ścieżkę \texttt{/play/multi/[id]} dla trybu wieloosobowego, gdzie \texttt{[id]} stanowi dynamiczny segment URL reprezentujący identyfikator pokoju gry. Katalog ten zawiera obecnie jedynie strukturę przygotowaną pod przyszłą implementację.
+
+% ============================================
+% 4. IMPLEMENTACJA LOGIKI GRY
+% ============================================
+\section{Implementacja logiki gry}
+
+\subsection{Klasa silnika gry RollingVillage}
+
+Centralnym elementem logiki aplikacji jest klasa \texttt{RollingVillage}, zdefiniowana w pliku \texttt{src/game/RollingVillage.ts}. Klasa ta implementuje kompletny automat stanów gry, zarządzając przejściami między fazami rozgrywki oraz walidując akcje gracza. Konstruktor klasy przyjmuje parametry inicjalizacyjne, takie jak nazwa gracza i nazwa miasta, a następnie inicjalizuje planszę gry jako 30-elementową tablicę reprezentującą planszę o wymiarach 6 kolumn na 5 wierszy.
+
+Gra przebiega przez trzy główne fazy, reprezentowane przez typ \texttt{GamePhase}: \texttt{setup} (konfiguracja początkowa), \texttt{main} (właściwa rozgrywka) oraz \texttt{gameover} (zakończenie gry). W ramach fazy głównej każda runda składa się z podfaz określonych typem \texttt{RoundPhase}: \texttt{build} (umieszczanie budynków na planszy), \texttt{bonus} (wybór budynku bonusowego, występujący co trzecią rundę) oraz \texttt{calculate} (obliczanie punktów dla wybranego wiersza).
+
+Metoda \texttt{tick()} stanowi główną pętlę aktualizacji stanu gry, wywoływaną cyklicznie przez komponent React. Metoda ta sprawdza bieżący stan gry i automatycznie przeprowadza przejścia między fazami, gdy spełnione są odpowiednie warunki. Przykładowo, po zatwierdzeniu przez gracza rozmieszczenia budynków, metoda \texttt{tick()} automatycznie przechodzi do fazy obliczania punktów lub fazy bonusowej.
+
+\subsection{System rzutu kośćmi i mapowanie wierszy}
+
+Mechanika rzutu kośćmi została zaimplementowana w osobnej klasie \texttt{Dice}, zdefiniowanej w pliku \texttt{src/game/Dice.ts}. Klasa ta udostępnia statyczną metodę \texttt{roll()}, która generuje wynik rzutu dwiema sześciennymi kośćmi, zwracając obiekt zawierający wartości obu kostek oraz informację o typie dostępnego budynku.
+
+Suma oczek na kościach determinuje wiersz planszy, w którym gracz może umieścić budynek. Mapowanie sum na wiersze zostało zdefiniowane w stałej \texttt{MAP\_ROWS} wewnątrz klasy \texttt{RollingVillage}. Sumy 3 i 4 odpowiadają wierszowi 0, sumy 5 i 6 wierszowi 1, suma 7 wierszowi 2, sumy 8 i 9 wierszowi 3, a sumy 10 i 11 wierszowi 4. Szczególne przypadki stanowią sumy 2 oraz 12, które pozwalają graczowi na swobodny wybór dowolnego wiersza.
+
+Wynik rzutu kośćmi określa również typ dostępnego budynku. Gdy obie kostki pokazują ten sam budynek, ale różne wartości, gracz otrzymuje możliwość postawienia fabryki (\texttt{factory}). Natomiast dublet, czyli identyczne wartości na obu kościach, odblokowuje budynek specjalny w postaci placu (\texttt{plaza}).
+
+\subsection{Typy budynków i algorytm punktacji}
+
+System budynków w grze obejmuje trzy typy podstawowe oraz dwa typy specjalne. Budynki podstawowe to dom (\texttt{house}), las (\texttt{forest}) oraz jezioro (\texttt{lake}), dostępne w standardowych rzutach kośćmi. Budynki specjalne, fabryka (\texttt{factory}) i plac (\texttt{plaza}), dostępne są wyłącznie przy określonych kombinacjach rzutów opisanych w poprzedniej sekcji.
+
+Algorytm obliczania punktów, zaimplementowany w metodzie prywatnej \texttt{calculateScore()}, analizuje połączenia między komórkami planszy. Podstawowe punkty przyznawane są za każdą komórkę zawierającą budynek, która jest połączona z aktualnie punktowanym wierszem. Połączenie definiowane jest jako ciąg sąsiadujących komórek (w kierunkach horyzontalnym i wertykalnym) tego samego typu budynku.
+
+Analiza połączeń między komórkami odbywa się w sposób rekurencyjny. Dla każdej komórki na planszy uruchamiamy funkcję, która sprawdza, czy obecna komórka jest w punktowanym wierszu. Jeśli tak, zwracamy prawdę i podliczamy punkty z tej komórki. W przeciwnym wypadku, rekurencyjnie uruchamiamy sprawdzanie, czy którakolwiek z sąsiednich komórek spełnia ten warunek. Aby uniknąć zapętlenia, zapisujemy dodatkowo sprawdzone już komórki i ignorujemy je w kolejnych wywołaniach.
+
+Fabryki generują dodatkowe punkty w zależności od sąsiedztwa. Każda fabryka sąsiadująca z lasem lub jeziorem otrzymuje bonus 10 punktów, natomiast sąsiedztwo z domem skutkuje karą 2 punktów, a sąsiedztwo z placem karą 5 punktów. Place generują znaczący bonus 10 punktów, gdy w ich bezpośrednim sąsiedztwie znajdują się jednocześnie dom, las i jezioro.
+
+\subsection{Mechanizm cofania i ponawiania akcji}
+
+System Undo został zaimplementowany w oparciu o wzorzec Memento, wykorzystujący snapshoty stanu gry. Typ \texttt{TurnSnapshot} definiuje strukturę migawki, obejmującą stan planszy (\texttt{board}), pozostałe do wykonania umieszczenia budynków (\texttt{remainingPlacements}), flagę pierwszego postawionego budynku (\texttt{isFirstBuildingPlaced}), zbiór wykorzystanych budynków bonusowych (\texttt{usedBonusBuildings}) oraz wybrany wiersz do punktacji (\texttt{selectedRow}).
+
+Przed każdą akcją gracza wywoływana jest metoda \texttt{saveSnapshot()}, która tworzy głęboką kopię bieżącego stanu i zapisuje ją na stosie stanów poprzednich. Metoda \texttt{undo()} przywraca ostatni zapisany stan ze stosu, jednocześnie zapisując bieżący stan na stosie stanów do ponowienia.
+
+Implementacja zapewnia, że gracz może wielokrotnie cofać swoje decyzje w ramach pojedynczej tury, co jest istotne ze względu na strategiczny charakter gry, gdzie optymalne rozmieszczenie budynków wymaga eksperymentowania z różnymi konfiguracjami.
+
+% ============================================
+% 5. KOMPONENTY INTERFEJSU UŻYTKOWNIKA
+% ============================================
+\section{Komponenty interfejsu użytkownika}
+
+\subsection{Strona główna i formularz inicjalizacji}
+
+Strona główna aplikacji, zdefiniowana w pliku \texttt{src/app/page.tsx}, prezentuje użytkownikowi formularz inicjalizacji gry stylizowany na wniosek o pozwolenie na budowę. Wybór tej konwencji wizualnej nawiązuje do tematyki gry, w której gracz wciela się w rolę architekta planującego zabudowę miasta.
+
+Tło strony wykorzystuje charakterystyczny wzór papieru kancelaryjnego, zaimplementowany przy użyciu gradientów CSS. Klasa \texttt{bg-grid-pattern} definiuje nakładające się linie poziome i wertykalne w kolorze niebieskim z przezroczystością, tworzące siatkę o wymiarach 25 na 25 pikseli. Efekt ten uzupełniają elementy dekoracyjne, takie jak kubek kawy, linijka, ołówki oraz cyrkiel, renderowane przez komponent \texttt{Decorations}.
+
+Formularz zawiera dwa pola tekstowe: imię architekta oraz nazwę projektowanego miasta. Po wypełnieniu formularza i kliknięciu przycisku zatwierdzenia, użytkownik przekierowywany jest do widoku gry z przekazanymi parametrami. Stylizacja formularza imituje oficjalny dokument z polami do wypełnienia oraz nagłówkiem.
+
+\subsection{Widok gry i komponenty planszy}
+
+Główny widok gry renderowany jest przez komponent zdefiniowany w pliku \texttt{src/app/play/single/page.tsx}. Komponent ten inicjalizuje instancję klasy \texttt{RollingVillage}, uruchamia pętlę gry oraz organizuje układ wszystkich elementów interfejsu. Layout widoku dzieli ekran na trzy sekcje: panel boczny z dostępnymi budynkami po lewej stronie, centralną planszę gry oraz panel punktacji po prawej stronie.
+
+Komponent \texttt{Board.tsx} odpowiada za renderowanie siatki gry o wymiarach 6 kolumn na 5 wierszy. Każda komórka siatki reprezentowana jest przez komponent \texttt{Cell.tsx}, który wyświetla aktualny stan komórki (pusty, zajęty przez budynek określonego typu) oraz obsługuje interakcje użytkownika. Kliknięcie na pustą komórkę w dozwolonym wierszu wywołuje menu wyboru budynku, renderowane przez komponent \texttt{SelectBuildingMenu.tsx}.
+
+Komponent \texttt{RemainingBuildings.tsx} prezentuje listę budynków dostępnych do umieszczenia w bieżącej turze, wizualizując wynik rzutu kośćmi. Po zakończeniu gry komponent ten zmienia swoją funkcję, wyświetlając podsumowanie rozgrywki wraz z końcowym wynikiem punktowym.
+
+Komponent \texttt{Score.tsx} prezentuje bieżącą punktację gracza oraz informacje kontekstowe o stanie gry, takie jak numer rundy, aktualną fazę oraz instrukcje dla gracza. Interfejs zawiera również przyciski akcji: zatwierdzenie tury (\texttt{confirmTurn}) i cofnięcie ostatniej akcji (\texttt{undo}).
+
+\subsection{Responsywność interfejsu}
+
+Aplikacja została zaprojektowana z myślą o responsywności, zapewniając poprawne wyświetlanie zarówno na urządzeniach mobilnych, jak i desktopowych. Implementacja responsywności opiera się na dwóch mechanizmach: dynamicznym skalowaniu CSS oraz adaptacyjnych komponentach dialogowych.
+
+Dynamiczne skalowanie zaimplementowano przy użyciu media queries reagujących na wysokość okna przeglądarki. Klasa \texttt{zoom-container} stosuje transformację \texttt{scale()} z wartościami malejącymi wraz ze zmniejszaniem się dostępnej wysokości ekranu. Dla ekranów o wysokości poniżej 1000 pikseli stosowana jest skala 0.90, dla wysokości poniżej 900 pikseli skala 0.80, a dla jeszcze mniejszych ekranów odpowiednio niższe wartości. Rozwiązanie to zapewnia, że cała plansza gry pozostaje widoczna bez konieczności przewijania.
+
+Na urządzeniach mobilnych panele boczne (dostępne budynki oraz punktacja) zostają ukryte z głównego układu i udostępnione poprzez modalne okna dialogowe. Wykorzystano w tym celu komponent \texttt{Dialog} z biblioteki Radix UI, dostosowany wizualnie do stylistyki aplikacji. Przyciski otwierające dialogi umieszczono w górnej części ekranu, zapewniając łatwy dostęp do wszystkich funkcji gry.
+
+\subsection{Komponenty biblioteki shadcn/ui}
+
+Generyczne komponenty interfejsu użytkownika pochodzą z systemu shadcn/ui i zostały umieszczone w katalogu \texttt{src/components/ui/}. Komponent \texttt{Button} stanowi podstawowy element interaktywny, wykorzystywany do wszystkich przycisków w aplikacji. Implementacja opiera się na bibliotece class-variance-authority, definiując siedem wariantów wizualnych oraz trzy rozmiary.
+
+Komponent \texttt{Dialog} wykorzystywany jest do wyświetlania modalnych okien dialogowych, w szczególności na urządzeniach mobilnych. Customowa wersja komponentu, nazwana \texttt{DialogSide}, rozszerza standardową funkcjonalność o możliwość wyświetlania dialogu wysuwanego z boku ekranu, co lepiej odpowiada wzorcom nawigacyjnym na urządzeniach dotykowych.
+
+Funkcja pomocnicza \texttt{cn()}, zdefiniowana w pliku \texttt{src/lib/utils.ts}, stanowi kluczowy element integracji Tailwind CSS z komponentami. Funkcja ta łączy biblioteki clsx i tailwind-merge, umożliwiając bezpieczne łączenie klas CSS z automatycznym rozwiązywaniem konfliktów między klasami Tailwind.
+
+% ============================================
+% 6. PROBLEMY I ROZWIĄZANIA
+% ============================================
+\section{Problemy i rozwiązania}
+
+\subsection{Reaktywność stanu gry w kontekście React}
+
+Jednym z głównych wyzwań technicznych napotkanych podczas implementacji była integracja mutowalnej klasy silnika gry z reaktywnym modelem React. Klasa \texttt{RollingVillage} przechowuje stan gry jako pola instancji, które są modyfikowane bezpośrednio przez metody klasy. Model ten, choć naturalny z perspektywy programowania obiektowego, stoi w sprzeczności z paradygmatem React, który oczekuje niemutowalnych aktualizacji stanu do wykrywania zmian wymagających ponownego renderowania.
+
+Rozwiązaniem tego problemu stało się wykorzystanie hooka \texttt{useReducer} w niekonwencjonalny sposób. Zamiast definiować reducer zarządzający stanem, utworzono prosty mechanizm wymuszający ponowne renderowanie komponentu. Wyrażenie \texttt{const [, forceRerender] = useReducer(x => x + 1, 0)} tworzy funkcję \texttt{forceRerender}, której każde wywołanie inkrementuje wewnętrzny licznik, powodując ponowne renderowanie komponentu.
+
+Funkcja \texttt{forceRerender()} wywoływana jest po każdej akcji modyfikującej stan gry, takiej jak umieszczenie budynku czy zatwierdzenie tury. Podejście to, choć niestandardowe, okazało się skuteczne w kontekście aplikacji, gdzie pojedyncza instancja klasy gry stanowi źródło prawdy dla całego stanu rozgrywki.
+
+\subsection{Implementacja pętli gry z wykorzystaniem requestAnimationFrame}
+
+Mechanika gry Rolling Village wymaga ciągłego monitorowania stanu i automatycznego przeprowadzania przejść między fazami. Wyzwanie polegało na zaimplementowaniu pętli gry (game loop), która byłaby wywoływana synchronicznie z odświeżaniem ekranu, jednocześnie integrując się z cyklem życia komponentów React.
+
+Rozwiązanie oparto na funkcji \texttt{requestAnimationFrame}, która planuje wykonanie callback'a przed następnym odmalowaniem ekranu przez przeglądarkę. Pętla gry została zaimplementowana jako rekurencyjna funkcja \texttt{loop()}, która wywołuje metodę \texttt{tick()} silnika gry, sprawdza czy wymagany jest rzut kośćmi, wymusza ponowne renderowanie komponentu, a następnie planuje kolejne wywołanie samej siebie.
+
+Inicjalizacja pętli odbywa się w hooku \texttt{useEffect} z pustą tablicą zależności, co zapewnia jednokrotne uruchomienie przy montowaniu komponentu. Funkcja czyszcząca hooka zmienia flagę \texttt{active} w celu zatrzymania pętli przy odmontowywaniu komponentu, zapobiegając wyciekom pamięci i błędom związanym z aktualizacją stanu odmontowanego komponentu.
+
+\subsection{Algorytm wyszukiwania alternatywnych kolumn}
+
+Reguły gry Rolling Village przewidują sytuację, gdy docelowa kolumna planszy jest całkowicie zapełniona. W takim przypadku gracz może umieścić budynek w najbliższej wolnej kolumnie. Implementacja tego mechanizmu wymagała opracowania algorytmu przeszukującego planszę w sposób spiralny, rozpoczynając od docelowej kolumny i naprzemiennie sprawdzając kolumny po lewej i prawej stronie.
+
+Metoda prywatna \texttt{findAlternativeColumns()} przyjmuje numer docelowej kolumny oraz informację o już zarezerwowanych polach w tej kolumnie. Algorytm iteruje przez wszystkie kolumny planszy, obliczając dla każdej odległość od kolumny docelowej oraz liczbę dostępnych pól. Kolumny sortowane są według kryterium odległości, a w przypadku równej odległości preferowana jest kolumna z większą liczbą wolnych pól.
+
+Wynikiem działania metody jest lista indeksów kolumn, z których gracz może wybrać lokalizację dla budynku. Zaimplementowane jest również zawijanie planszy horyzontalnie. Oznacza to, że jeśli docelowa kolumna znajduje się na skraju planszy, algorytm uwzględnia również kolumny z przeciwległego końca planszy jako najbliższe alternatywy.
+
+% ============================================
+% 7. PODSUMOWANIE
+% ============================================
+\section{Podsumowanie}
+
+Realizacja projektu Rolling Village pozwoliła na praktyczne zastosowanie nowoczesnych technologii frontendowych w kontekście interaktywnej aplikacji webowej. Wykorzystanie frameworka Next.js 15 z App Router, biblioteki React 19 oraz języka TypeScript zapewniło solidną podstawę architektoniczną, umożliwiającą dalszy rozwój aplikacji.
+
+Tryb gry jednoosobowej został w pełni zaimplementowany, oferując kompletne doświadczenie rozgrywki zgodne z regułami oryginalnej gry planszowej. Interfejs użytkownika, zbudowany w oparciu o komponenty shadcn/ui oraz framework Tailwind CSS, zapewnia estetyczny wygląd i responsywność na różnych urządzeniach. Charakterystyczna stylizacja papieru milimetrowego nadaje aplikacji unikalny charakter, nawiązujący do tematyki architektonicznej gry.
+
+Separacja logiki gry od warstwy prezentacji, zrealizowana poprzez wyodrębnienie klasy \texttt{RollingVillage}, stanowi kluczowy element architektury, ułatwiający testowanie oraz potencjalne przeniesienie logiki do innych platform. Mechanizm Undo oraz automatyczne przejścia między fazami gry zapewniają płynne doświadczenie użytkownika.
+
+Projekt przewiduje możliwość rozszerzenia o tryb wieloosobowy, czego odzwierciedleniem jest przygotowana struktura katalogów dla endpointów API oraz dynamicznych tras routingu. Implementacja tej funkcji stanowi naturalny kierunek dalszego rozwoju aplikacji. Dodatkowo, wprowadzenie testów jednostkowych dla klasy silnika gry oraz testów integracyjnych dla komponentów React zwiększyłoby niezawodność aplikacji i ułatwiło jej utrzymanie.
+
+% ============================================
+% 8. BIBLIOGRAFIA
+% ============================================
+\newpage
+\section{Bibliografia}
+
+\begin{thebibliography}{9}
+
+\bibitem{nextjs}
+Vercel Inc.
+\textit{Next.js Documentation}.
+Dostępne online: \url{https://nextjs.org/docs}
+
+\bibitem{react}
+Meta Platforms, Inc.
+\textit{React Documentation}.
+Dostępne online: \url{https://react.dev}
+
+\bibitem{typescript}
+Microsoft Corporation.
+\textit{TypeScript Documentation}.
+Dostępne online: \url{https://www.typescriptlang.org/docs/}
+
+\bibitem{tailwind}
+Tailwind Labs Inc.
+\textit{Tailwind CSS Documentation}.
+Dostępne online: \url{https://tailwindcss.com/docs}
+
+\bibitem{shadcn}
+shadcn.
+\textit{shadcn/ui Documentation}.
+Dostępne online: \url{https://ui.shadcn.com}
+
+\bibitem{radix}
+WorkOS.
+\textit{Radix UI Primitives}.
+Dostępne online: \url{https://www.radix-ui.com/primitives}
+
+\bibitem{mdn}
+Mozilla Developer Network.
+\textit{MDN Web Docs}.
+Dostępne online: \url{https://developer.mozilla.org}
+
+\end{thebibliography}
+
+\end{document}
